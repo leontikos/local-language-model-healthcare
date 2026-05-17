@@ -45,5 +45,4 @@ multirun/
 # Local Claude config (personal notes, not shared)
 CLAUDE.local.md
 
-# Scripts runtime config (has cop_offset etc. after verification)
-scripts/config.json
+# scripts/config.json is committed — contains verified cop_map and ids_ABCD

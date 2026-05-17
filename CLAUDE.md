@@ -55,12 +55,11 @@ python scripts/02_finetune.py model=qlora_4bit training.epochs=1
 
 ## Critical implementation details
 
-**cop encoding (MedMCQA):** 0-indexed — `{0:'A', 1:'B', 2:'C', 3:'D'}`.
-Verify empirically before any training. Result saved to `scripts/config.json`.
+**cop encoding (MedMCQA):** 0-indexed — `{0:'A', 1:'B', 2:'C', 3:'D'}`. ✅ VERIFIED.
 
-**Mistral tokenization:** `' A'` (with leading space) → single token `▁A`.
-Always use `tokenizer.encode(" A", add_special_tokens=False)[0]` for ids_ABCD.
-Do NOT use `tokenizer.encode("A")` — different token ID.
+**Mistral tokenization:** ids_ABCD = [1098, 1133, 1102, 1152] (A,B,C,D). ✅ VERIFIED.
+Both `' A'` and `'A'` give the same token ID 1098 — safe to use either.
+Use `logits[..., [1098, 1133, 1102, 1152]]` directly for restricted entropy.
 
 **Entropy:** always use `p * torch.log(p + 1e-10)` to avoid -inf when p=0.
 

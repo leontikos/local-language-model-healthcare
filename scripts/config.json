@@ -1,0 +1,17 @@
+{
+  "cop_offset": 0,
+  "cop_map": {
+    "0": "A",
+    "1": "B",
+    "2": "C",
+    "3": "D"
+  },
+  "blocker_1_done": true,
+  "ids_ABCD": [
+    1098,
+    1133,
+    1102,
+    1152
+  ],
+  "blocker_2_done": true
+}

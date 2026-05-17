@@ -1342,11 +1342,12 @@ else:
 [✅] KROK 0   Setup: struktura projektu, CLAUDE.md, pyproject.toml, Makefile, configs/
               scripts/00_verify.py gotowy
 
-[ ] KROK 1a  BLOCKER 1: cop encoding          (~30 min, ręczne sprawdzenie)
-             → make verify  lub  python scripts/00_verify.py --blocker 1
+[✅] KROK 1a  BLOCKER 1: cop encoding — 0-indexed {0:'A',1:'B',2:'C',3:'D'}
+             cop_map zapisany w scripts/config.json
 
-[ ] KROK 1b  BLOCKER 2: tokenizacja A/B/C/D   (~10 min)
-             → python scripts/00_verify.py --blocker 2
+[✅] KROK 1b  BLOCKER 2: tokenizacja A/B/C/D — wszystkie single token
+             ids_ABCD = [1098, 1133, 1102, 1152]  (A, B, C, D)
+             Uwaga: ' A' i 'A' dają ten sam ID — bezpieczne
 
 [ ] KROK 2   Data preparation                  (~1h)
              → python scripts/01_prepare.py
