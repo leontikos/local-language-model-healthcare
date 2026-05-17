@@ -1,0 +1,48 @@
+# Main config — override individual keys from CLI:
+# python scripts/02_finetune.py model=qlora_4bit training.epochs=1
+
+defaults:
+  - model: lora_fp16
+  - data: datasets
+
+seed: 42
+
+paths:
+  data_raw:      data/raw
+  data_splits:   data/splits
+  data_features: data/features
+  checkpoints:   checkpoints
+  results:       results
+  figures:       figures
+
+training:
+  epochs: 3
+  batch_size: 1
+  grad_accum: 8           # effective batch = 8
+  lr: 2e-4
+  warmup_ratio: 0.03
+  lr_scheduler: cosine
+  max_seq_len: 512
+  logging_steps: 100
+  save_strategy: epoch
+  save_total_limit: 2
+  report_to: wandb        # set to "none" to disable W&B
+
+probe:
+  n_splits: 5
+  Cs: [0.001, 0.01, 0.1, 1.0, 10.0]
+  layer_sweep: [8, 16, 24, 30, 31]   # L//4, L//2, 3L//4, L-2, L-1
+
+routing:
+  train_size: 12000
+  iso_cal_size: 4000
+  correlation_threshold: 0.85  # drop gap if r(H, gap) > this
+
+conformal:
+  alphas: [0.05, 0.10, 0.15, 0.20]
+  primary_alpha: 0.10
+  n_bootstrap: 1000
+
+evaluation:
+  n_bootstrap: 1000
+  ece_bins: 15

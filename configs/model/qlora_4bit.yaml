@@ -1,0 +1,30 @@
+name: qlora_4bit
+base_model: mistralai/Mistral-7B-Instruct-v0.3
+quantization: nf4           # 4-bit NF4 quantization
+
+lora:
+  r: 16
+  lora_alpha: 16
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  lora_dropout: 0.05
+  bias: none
+
+load_in_4bit: true
+bnb_4bit_quant_type: nf4
+bnb_4bit_compute_dtype: float16
+bnb_4bit_use_double_quant: true
+torch_dtype: float16
+device_map: auto
+gradient_checkpointing: true
+optim: paged_adamw_32bit
+
+# NOTE: QLoRA fallback — run KL ablation after fine-tuning:
+# python scripts/00_verify.py --blocker kl
+# Expected: mean KL(4-bit || FP16) < 0.05 nats

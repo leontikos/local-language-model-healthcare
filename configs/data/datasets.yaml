@@ -1,0 +1,23 @@
+medmcqa:
+  hf_id: openlifescienceai/medmcqa
+  choice_type_filter: single
+  probe_set_size: 16000
+  splits:
+    train: train    # ~128K after filtering + probe removal
+    cal: validation # 4183 — conformal calibration ONLY
+    test: test      # 6150 — in-distribution eval
+
+medqa:
+  hf_id: GBaker/MedQA-USMLE-4-options
+  split: test       # 1273 — near-OOD eval
+
+mmlu:
+  hf_id: cais/mmlu
+  # college_biology excluded — too general
+  categories:
+    - clinical_knowledge      # 265
+    - professional_medicine   # 272
+    - college_medicine        # 173
+    - medical_genetics        # 100
+    - anatomy                 # 135
+  split: test                 # 945 total — far-OOD eval

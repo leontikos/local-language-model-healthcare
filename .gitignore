@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Data — large files, not committed
+data/raw/
+data/processed/
+data/features/
+
+# data/splits/ IS committed (small JSON index files)
+
+# Model checkpoints
+checkpoints/
+*.bin
+*.safetensors
+*.pt
+*.ckpt
+
+# Experiment tracking
+wandb/
+mlruns/
+outputs/
+multirun/
+
+# Results and figures ARE committed
+# results/  ← do not ignore
+# figures/  ← do not ignore
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store
+.DS_Store?
+
+# Local Claude config (personal notes, not shared)
+CLAUDE.local.md
+
+# Scripts runtime config (has cop_offset etc. after verification)
+scripts/config.json
