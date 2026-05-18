@@ -1,0 +1,161 @@
+{
+  "medmcqa_eda": {
+    "answer_distribution": {
+      "counts": {
+        "A": 32981,
+        "B": 28825,
+        "C": 24354,
+        "D": 18605
+      },
+      "pct": {
+        "A": 31.48,
+        "B": 27.51,
+        "C": 23.25,
+        "D": 17.76
+      },
+      "max_deviation_pp": 7.24
+    },
+    "subject_distribution": {
+      "Medicine": 9459,
+      "Surgery": 9173,
+      "Pathology": 8607,
+      "Pharmacology": 8168,
+      "Anatomy": 8014,
+      "Social & Preventive Medicine": 6982,
+      "Microbiology": 6602,
+      "Gynaecology & Obstetrics": 5543,
+      "Physiology": 5396,
+      "Biochemistry": 5189,
+      "Dental": 4973,
+      "Pediatrics": 4660,
+      "Ophthalmology": 4011,
+      "Forensic Medicine": 3696,
+      "ENT": 2787,
+      "Radiology": 2725,
+      "Psychiatry": 2388,
+      "Orthopaedics": 1800,
+      "Anaesthesia": 1785,
+      "Unknown": 1697,
+      "Skin": 1110
+    },
+    "prompt_length": {
+      "n_sample": 5000,
+      "p50": 53.0,
+      "p95": 102.0,
+      "p99": 149.0,
+      "max": 314,
+      "pct_over_512": 0.0
+    },
+    "exp_missing": {
+      "n_total": 104765,
+      "n_has_exp": 92279,
+      "pct_missing": 11.9,
+      "per_subject_missing_pct": {
+        "Forensic Medicine": 2.8,
+        "Gynaecology & Obstetrics": 3.3,
+        "Anatomy": 5.2,
+        "Microbiology": 10.1,
+        "Surgery": 14.8,
+        "Dental": 56.8,
+        "Physiology": 5.7,
+        "Anaesthesia": 3.4,
+        "Pharmacology": 18.4,
+        "Pathology": 12.7,
+        "Medicine": 18.8,
+        "Biochemistry": 4.7,
+        "Pediatrics": 4.8,
+        "Social & Preventive Medicine": 13.3,
+        "Orthopaedics": 7.6,
+        "Psychiatry": 3.4,
+        "Ophthalmology": 1.4,
+        "ENT": 10.1,
+        "Unknown": 2.7,
+        "Radiology": 7.6,
+        "Skin": 0.0
+      }
+    }
+  },
+  "overlap_check": {
+    "medmcqa_n": 120765,
+    "medqa_n": 1273,
+    "mmlu_n": 945,
+    "exact_matches_medqa": 0,
+    "exact_matches_mmlu": 0,
+    "near_dup_threshold": 0.85,
+    "near_dup_sample_size": 10000,
+    "near_dup_count": 2,
+    "near_dup_top10": [
+      {
+        "ood_source": "mmlu",
+        "ood_question": "a nonsense mutation involves ",
+        "medmcqa_question": "leiden mutation involves ",
+        "cosine_sim": 1.0
+      },
+      {
+        "ood_source": "mmlu",
+        "ood_question": "which of the following is an example of monosomy ",
+        "medmcqa_question": "bedsore is an example of ",
+        "cosine_sim": 0.9067
+      }
+    ]
+  },
+  "internal_dup_check": {
+    "ft_sample_size": 10000,
+    "probe_size": 16000,
+    "exact_dups": 322,
+    "near_dup_threshold": 0.9,
+    "near_dup_count": 1043,
+    "near_dup_top10": [
+      {
+        "probe_question": "garden spade deformity is seen in ",
+        "ft_question": "garden spade deformity is seen in ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "herbe pits are seen in ",
+        "ft_question": "herberts pits are seen in ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "according to who exclusive breast milk is given upto ",
+        "ft_question": "according to who exclusive breast milk is given upto ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "which of the following is a nonculturalable fungus ",
+        "ft_question": "which of the following is a nonculturalable fungus ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "auspitz sign is seen in ",
+        "ft_question": "auspitz sign is seen in ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "ribonuclease p is",
+        "ft_question": "thanatophobia is ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "left sided superior vena cava drains into ",
+        "ft_question": "left sided superior vena cava drains into",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "the burrows in scabies is in the ",
+        "ft_question": "the burrows in scabies is in the ",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "in multibacillary leprosy the follow up examination after adequate treatment should be done yearly f",
+        "ft_question": "in multibacillary leprosy the follow up examination after adequate treatment should be done yearly f",
+        "cosine_sim": 1.0
+      },
+      {
+        "probe_question": "population covered by a phc in hilly region is ",
+        "ft_question": "population covered by a phc in hilly region is ",
+        "cosine_sim": 1.0
+      }
+    ]
+  }
+}

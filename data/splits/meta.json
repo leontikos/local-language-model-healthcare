@@ -1,0 +1,11 @@
+{
+  "seed": 42,
+  "filter": "choice_type == 'single'",
+  "dedup_method": "exact_match_normalized",
+  "n_train_raw": 182822,
+  "n_train_single": 120765,
+  "n_train_ft": 104765,
+  "n_probe": 13307,
+  "n_routing_train": 9307,
+  "n_iso_cal": 4000
+}

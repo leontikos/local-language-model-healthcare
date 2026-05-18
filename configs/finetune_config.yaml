@@ -1,0 +1,89 @@
+# Fine-tuning config — Mistral-7B LoRA FP16 on MedMCQA
+# Override from CLI: python scripts/02_finetune.py training.learning_rate=1e-4
+#
+# Run:
+#   HF_TOKEN=<token> WANDB_API_KEY=<key> python scripts/02_finetune.py
+#   python scripts/02_finetune.py --debug          # smoke test, no GPU needed
+
+seed: 42
+
+model:
+  model_name_or_path: mistralai/Mistral-7B-Instruct-v0.3
+  # bfloat16 on A100 — more stable than fp16, no loss scaling needed
+  torch_dtype: bfloat16
+  attn_implementation: flash_attention_2   # A100 supports FA2; fallback: set to eager
+
+lora:
+  r: 16
+  lora_alpha: 32               # 2 × r — standard scaling
+  lora_dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  bias: none
+  task_type: CAUSAL_LM
+
+data:
+  dataset_id: openlifescienceai/medmcqa
+  train_indices_json: data/splits/train_ft_idx.json  # null → use full HF train split
+  response_template: "Answer:"    # bare template; script prepends space before encoding
+  max_seq_length: 512          # p99 = 149 tokens; 512 is safe with 3× margin
+
+training:
+  num_train_epochs: 3          # upper bound; early stopping triggers earlier if needed
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 32
+  gradient_accumulation_steps: 8   # effective batch = 16
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.06           # ~1170 warmup steps (6% of 3×6.5K=19.5K total steps)
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+
+  eval_strategy: steps
+  eval_steps: 650              # ~10 evals/epoch at eff. batch=16 (104K/16=6.5K steps/epoch)
+  save_strategy: steps
+  save_steps: 650              # MUST equal eval_steps for load_best_model_at_end
+  save_total_limit: 3
+
+  # Early stopping — uses eval_loss (NOT accuracy)
+  # Reason: SFTTrainer GitHub #1222 — EarlyStoppingCallback cannot use custom
+  # compute_metrics. eval_loss works out-of-the-box and is the Med42 precedent.
+  # patience=3 eval events ≈ 1950 steps ≈ 0.30 epochs at eval_steps=650.
+  metric_for_best_model: eval_loss
+  greater_is_better: false
+  load_best_model_at_end: true
+  early_stopping_patience: 3
+
+  bf16: true
+  fp16: false                  # explicitly off to avoid conflicts
+  gradient_checkpointing: false  # A100 40GB has ample VRAM; GC only costs speed
+  optim: adamw_torch           # paged_adamw is for consumer GPUs; adamw_torch is faster on A100
+  dataloader_num_workers: 4
+  group_by_length: true
+
+  logging_steps: 50
+  report_to: wandb             # falls back to tensorboard if WANDB_API_KEY not set
+
+wandb:
+  project: medical-llm-thesis
+  run_name: finetune_medmcqa_mistral7b
+  entity: null                 # fill your W&B username/team, or leave null
+
+paths:
+  checkpoint_dir: checkpoints
+  final_checkpoint_dir: checkpoints/final
+
+# Debug mode (--debug flag): uses 512 train + 128 val examples, 1 eval step
+# Lets you verify the full pipeline without a GPU.
+debug:
+  train_samples: 512
+  val_samples: 128
+  eval_steps: 10
+  save_steps: 10
+  num_train_epochs: 1

@@ -4,7 +4,7 @@ quantization: nf4           # 4-bit NF4 quantization
 
 lora:
   r: 16
-  lora_alpha: 16
+  lora_alpha: 32   # 2×r — standard scaling, consistent with lora_fp16.yaml
   target_modules:
     - q_proj
     - k_proj

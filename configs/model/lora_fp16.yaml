@@ -4,7 +4,7 @@ quantization: null          # FP16, no quantization
 
 lora:
   r: 16
-  lora_alpha: 16
+  lora_alpha: 32   # 2×r — standard scaling
   target_modules:
     - q_proj
     - k_proj
@@ -19,5 +19,5 @@ lora:
 load_in_4bit: false
 torch_dtype: float16
 device_map: auto
-gradient_checkpointing: true
-optim: paged_adamw_32bit
+gradient_checkpointing: false   # A100 40GB — no need
+optim: adamw_torch

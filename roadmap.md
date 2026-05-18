@@ -1349,35 +1349,114 @@ else:
              ids_ABCD = [1098, 1133, 1102, 1152]  (A, B, C, D)
              Uwaga: ' A' i 'A' dają ten sam ID — bezpieczne
 
-[ ] KROK 2   Data preparation                  (~1h)
+[✅] KROK 2   Data preparation                  DONE
              → python scripts/01_prepare.py
+             train_ft=104 765 (nienaruszony), probe=13 307, routing_train=9 307, iso_cal=4 000
+             Deduplikacja: 2 693 exact duplicates usunięte z probe_set (znormalizowany string match)
+             Uzasadnienie: TF-IDF cosine zbyt agresywny przy krótkich MCQ — łapie template similarity
+             Uwaga: choice_type='single' = 66.1% (120 765/182 822) — poniżej oczekiwanych ~80%
+             Uwaga: 2 693 exact duplicates między MedMCQA train_ft i probe (źródło: scraping tych samych stron)
+             Splity zapisane w data/splits/ (seed=42, stratified by subject_name, dedup=exact_match)
 
-[ ] KROK 3   Fine-tuning                       (1-7 dni compute)
-             → make finetune  lub  make finetune-qlora
+[ ] KROK 3   Fine-tuning                       (1-2 dni, GPU PROFESORA ≥24GB)
+             → python scripts/02_finetune.py
+             LoRA FP16, r=16, 3 epoki max, early stopping patience=5 @ accuracy
+             eval_steps=1300, save_steps=1300, bf16=True, paged_adamw_32bit
+             Monitoring: W&B (student widzi postęp bez SSH)
+             Output: checkpoints/final/ (~150MB LoRA adapter)
 
-[ ] KROK 1c  BLOCKER 3: p(True) weryfikacja   (~1h, PO fine-tuningu)
+[ ] KROK 1c  BLOCKER 3: p(True) weryfikacja   (~1h, GPU PROFESORA, zaraz po fine-tuningu)
              → python scripts/00_verify.py --blocker 3
-             ↓ jeśli p(True) działa → włącz; jeśli nie → wyklucz z routing features
+             ↓ jeśli mean Yes/No mass ≥ 0.3 → włącz p_true; jeśli nie → wyklucz z routing features
 
-[ ] KROK 4   Feature extraction (layer sweep + pełna) (~4-8h compute)
+[ ] KROK 4   Feature extraction                (~4-8h, GPU PROFESORA ≥8GB)
              → python scripts/03_extract.py
+             Ekstrahuje: H, gap, p_true, y, pred + hidden states [4096] dla:
+               probe_set (13 307), val (4 183), test_medmcqa (6 150),
+               test_medqa (1 273), test_mmlu (945)  — łącznie ~28 500 próbek
+             Output: data/features/*.npz (~500MB łącznie)
+             !! PROFESOR ODSYŁA: checkpoints/final/ + data/features/*.npz
 
-[ ] KROK 5   Probe training (5-fold CV)        (~1-2h)
+[ ] KROK 5   Probe training (5-fold CV)        (~1-2h, CPU LOKALNIE)
              → python scripts/04_probe.py
 
-[ ] KROK 6   Routing policy + calibration      (~30 min)
+[ ] KROK 6   Routing policy + calibration      (~30 min, CPU LOKALNIE)
              → python scripts/05_routing.py
 
-[ ] KROK 7   Conformal calibration             (~10 min)
+[ ] KROK 7   Conformal calibration             (~10 min, CPU LOKALNIE)
              → python scripts/06_conformal.py
 
-[ ] KROK 8   Evaluation (3 tiers)              (~2h compute)
+[ ] KROK 8   Evaluation (3 tiers)              (~30 min, CPU LOKALNIE)
              → make evaluate
 
-[ ] KROK 9   Ablations                         (~1 dzień compute)
+[ ] KROK 9   Ablations                         (~kilka godzin, GPU PÓŹNIEJ — osobna sesja)
              → python scripts/08_ablations.py
+             Wymaga GPU dla: layer sweep (03_extract na 5 warstwach × 500 próbek),
+             QLoRA KL ablation (jeśli używano QLoRA)
+             Reszta ablacji (signal subset, calibration, CP variant): CPU
 
 [ ]          Pisanie diploma.md / thesis
+```
+
+---
+
+## PODZIAŁ ZASOBÓW — CO GDZIE URUCHAMIAMY
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  GPU PROFESORA (sesja 1, ~2-3 dni łącznie)                              │
+│  Wymagania: ≥24 GB VRAM (KROK 3), ≥8 GB VRAM (KROK 4), SSH opcjonalny │
+├─────────────────────────────────────────────────────────────────────────┤
+│  KROK 3   Fine-tuning           1-2 dni   scripts/02_finetune.py        │
+│  KROK 1c  BLOCKER 3 (p(True))  ~1h       scripts/00_verify.py --b 3    │
+│  KROK 4   Feature extraction   4-8h      scripts/03_extract.py         │
+│                                                                          │
+│  Profesor odsyła:                                                        │
+│    checkpoints/final/     (LoRA adapter, ~150MB)                        │
+│    data/features/*.npz    (hidden states, ~500MB)                       │
+│    wandb run link         (logi treningu)                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  CPU LOKALNIE (po otrzymaniu plików od profesora, ~2-4h)                │
+├─────────────────────────────────────────────────────────────────────────┤
+│  KROK 5   Probe training        1-2h     scripts/04_probe.py            │
+│  KROK 6   Routing + calibration ~30 min  scripts/05_routing.py          │
+│  KROK 7   Conformal calibration ~10 min  scripts/06_conformal.py        │
+│  KROK 8   Evaluation (3 tiers)  ~30 min  make evaluate                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  GPU PÓŹNIEJ (sesja 2, osobna — opcjonalna/na żądanie)                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│  KROK 9   Layer sweep ablation  ~2-4h    scripts/08_ablations.py        │
+│           QLoRA KL ablation     ~1h      (tylko jeśli używano QLoRA)    │
+│           Signal/CP ablations   CPU      (reszta ablacji bez GPU)       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## EARLY STOPPING — FINALNA KONFIGURACJA (po deep research × 3 rundy)
+
+```
+Metryka:       eval_loss   (NIE accuracy — SFTTrainer GitHub #1222: EarlyStoppingCallback
+                            nie może używać custom compute_metrics z SFTTrainer)
+eval_steps:    1000        (~13 ewaluacji per epoka; 104K/8=13K kroków/epoka)
+save_steps:    1000        (MUSI = eval_steps gdy load_best_model_at_end=True)
+patience:      3            (eval EVENTS, nie epoki — przy eval_steps=1000:
+                            patience=3 = 3000 kroków ≈ 0.23 epoki; właściwa granularność)
+greater_is_better: False   (minimalizujemy loss)
+bf16:          True        (A100: bfloat16 stabilniejszy niż fp16; fp16=False jawnie)
+fp16:          False       (jawnie wyłącz — unika konfliktów z bf16)
+upper_bound:   3 epoki     (Raschka dot. ogólnego instruction-tuning; medical MCQ = 3+)
+
+Uzasadnienie eval_loss zamiast accuracy:
+  - Med42 (najbliższy precedens: medical LLM MCQ LoRA) → używa eval_loss
+  - Badanie Feb 2026: accuracy-based ES wypadało GORZEJ niż loss-based na benchmarkach
+  - Przy masked completion (loss tylko na tokenie A/B/C/D) eval_loss ≈ task objective
+  - SFTTrainer automatycznie liczy mean_token_accuracy w logach (W&B) — widoczne diagnostycznie
+
+Uwaga: mean_token_accuracy jest logowane automatycznie przez SFTTrainer (widoczne w W&B)
+ale NIE może być użyte jako trigger dla EarlyStoppingCallback bez custom callback.
 ```
 
 ---
