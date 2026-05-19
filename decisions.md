@@ -135,6 +135,18 @@ Format: decision → rationale → thesis implication (where relevant).
 
 ---
 
+### D-16 · Scope limited to multiple-choice questions (MCQ)
+
+**Decision:** The entire pipeline — uncertainty signals, routing, and conformal calibration — is designed and evaluated exclusively on 4-option MCQ tasks. All three datasets (MedMCQA, MedQA-USMLE, MMLU) are MCQ.
+
+**Rationale:** The primary uncertainty signals (restricted entropy H, logit gap) are computed over the closed-set distribution P(A), P(B), P(C), P(D). This is only well-defined when the answer set is finite and fixed. In open-ended generation, there are no discrete option tokens to compare — the method does not transfer directly. MCQ is the standard benchmark format in medical AI evaluation, so the scope is legitimate and well-motivated; it simply needs to be stated explicitly so reviewers don't ask.
+
+**Thesis implication (Limitations section):** "This work evaluates routing on multiple-choice questions, where uncertainty signals derived from closed-set logit distributions (H, gap) are well-defined. All three evaluation datasets (MedMCQA, MedQA-USMLE, MMLU medical) follow the 4-option MCQ format. Extension to open-ended medical questions would require alternative uncertainty quantification methods, such as semantic entropy or sampling-based approaches — this is left as future work."
+
+**Note on "on-device" claim:** 7B model in bfloat16 requires ≥8 GB VRAM — this means high-end consumer GPU or Apple Silicon with ≥16 GB unified memory, not a mobile device. The thesis should clarify this scope in the Introduction.
+
+---
+
 ### D-15 · Bootstrap CI: 1,000 resamples, seed=42, reported as [2.5%, 97.5%]
 
 **Decision:** All confidence intervals use 1,000 bootstrap resamples with `np.random.default_rng(seed=42)`, reporting the 2.5th and 97.5th percentiles.
