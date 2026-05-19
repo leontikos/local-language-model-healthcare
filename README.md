@@ -122,7 +122,48 @@ make evaluate
 Config overrides via OmegaConf syntax:
 ```bash
 python scripts/02_finetune.py model=qlora_4bit training.epochs=1 --debug
-python scripts/03_extract.py --split probe --debug
+python scripts/03_extract.py --splits probe --debug
+```
+
+### 🧪 Debug run — without the 7B model (MacBook Air / CPU)
+
+Scripts 04–07 run fully on CPU. Scripts 02 and 03 require GPU, but you can verify the entire pipeline structure without loading Mistral:
+
+```bash
+# 1. Syntax check all scripts (instant, no imports)
+python -m py_compile scripts/02_finetune.py && echo "02 OK"
+python -m py_compile scripts/03_extract.py  && echo "03 OK"
+
+# 2. Verify configs and imports parse correctly (no GPU needed)
+python -c "
+from omegaconf import OmegaConf
+from pathlib import Path
+cfg = OmegaConf.load('configs/finetune_config.yaml')
+print('Config OK:', dict(cfg.model))
+"
+
+# 3. Run full data preparation (sklearn + HuggingFace datasets, CPU only, ~10 min)
+python scripts/01_prepare.py
+# → produces data/splits/*.json — verify sizes in meta.json
+
+# 4. Smoke-test 02_finetune --debug (512 train examples, 1 eval step, downloads tokenizer only)
+#    Still downloads the model weights (~14 GB) — skip if you don't have space
+python scripts/02_finetune.py --debug
+
+# 5. After receiving features from professor, run the rest locally:
+python scripts/04_probe.py
+python scripts/05_routing.py
+python scripts/06_conformal.py
+make evaluate
+```
+
+**What the professor sends you (~650 MB total):**
+```
+checkpoints/final/          ← LoRA adapter (~150 MB)
+data/features/*.npz         ← scalar features: H, gap, p_true, y, pred, true, subject
+data/features/*_hidden.npy  ← hidden states [N, 4096] float32 (~500 MB)
+results/layer_sweep.json    ← which layer was best
+results/extraction_metadata.json
 ```
 
 ---

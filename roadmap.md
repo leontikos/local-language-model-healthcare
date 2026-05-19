@@ -421,15 +421,28 @@ def extract_p_true(model, tokenizer, original_prompt, pred_answer):
 ## SEKCJA 4 — CORRECTNESS PROBE (5-fold cross-fitting)
 
 ```python
+import json
+import numpy as np
+from pathlib import Path
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_auc_score
 
-# Dane z probe_set (13,307 po dedup — patrz data/splits/meta.json)
-H_hidden = np.stack([ex["h"] for ex in probe_features])  # [13307, 4096]
-y_probe  = np.array([ex["y"] for ex in probe_features])  # [13307]
+# 03_extract.py zapisuje dwa pliki na split:
+#   data/features/probe_features.npz  — skalary: H, gap, p_true, y, pred, true, subject
+#   data/features/probe_hidden.npy    — hidden states [N, 4096], float32  (osobny plik — szybszy load)
+# NIE ma klucza "h" w .npz — hidden states są WYŁĄCZNIE w _hidden.npy
 
-probe_scores_oof = np.zeros(len(probe_features))  # 13307
+FEATURES_DIR = Path("data/features")
+SPLITS_DIR   = Path("data/splits")
+
+d        = np.load(FEATURES_DIR / "probe_features.npz", allow_pickle=False)
+H_hidden = np.load(FEATURES_DIR / "probe_hidden.npy")   # [13307, 4096], float32
+y_probe  = d["y"].astype(np.int32)                       # [13307]
+# Dostępne też: d["H"], d["gap"], d["p_true"], d["pred"], d["true"], d["subject"]
+
+n_probe = len(y_probe)  # 13307 po dedup
+probe_scores_oof = np.zeros(n_probe)
 
 kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
@@ -452,7 +465,7 @@ for fold, (train_idx, val_idx) in enumerate(kf.split(H_hidden, y_probe)):
 
 print(f"Mean OOF AUROC = {roc_auc_score(y_probe, probe_scores_oof):.4f}")
 
-# Final probe na pełnych 16K (dla ekstrakcji probe_scores na val/test)
+# Final probe na pełnych 13,307 (dla ekstrakcji probe_scores na val/test)
 final_probe = LogisticRegressionCV(
     Cs=[0.001, 0.01, 0.1, 1.0, 10.0],
     cv=3, penalty="l2", scoring="roc_auc", max_iter=1000
@@ -474,11 +487,12 @@ final_probe.fit(H_hidden, y_probe)
 ```python
 import pandas as pd
 
+# d i probe_scores_oof z Sekcji 4 (probe_features.npz + 5-fold OOF)
 features_df = pd.DataFrame({
-    "H":      [ex["H"]      for ex in probe_features],
-    "gap":    [ex["gap"]    for ex in probe_features],
+    "H":      d["H"].astype(float),
+    "gap":    d["gap"].astype(float),
     "probe":  probe_scores_oof,
-    "p_true": [ex["p_true"] for ex in probe_features],
+    "p_true": d["p_true"].astype(float),
 })
 
 corr_matrix = features_df.corr(method="pearson")
@@ -1285,10 +1299,22 @@ else:
 ```python
 # src/05_routing.py
 
-# 1. Wczytaj probe_features.npz + probe_scores_oof
-# 2. Split probe_set → routing_train (12K) + iso_cal (4K), seed=42
-# 3. Trenuj routing LR na 12K
-# 4. Kalibruj: isotonic regression na 4K
+# WAŻNE: routing_train_idx.json i iso_cal_idx.json zawierają GLOBALNE indeksy
+# (do train_single z MedMCQA), ale probe_features.npz jest indeksowane LOKALNIE
+# (wiersz 0 = pierwszy element probe_idx, wiersz 1 = drugi, itd.).
+# Wymagane mapowanie global → local przed użyciem:
+#
+#   probe_idx         = json.loads((splits_dir / "probe_idx.json").read_text())
+#   routing_global    = json.loads((splits_dir / "routing_train_idx.json").read_text())
+#   iso_global        = json.loads((splits_dir / "iso_cal_idx.json").read_text())
+#   g2l = {g: i for i, g in enumerate(probe_idx)}
+#   routing_local = [g2l[g] for g in routing_global]   # indeksy do probe_features.npz
+#   iso_local     = [g2l[g] for g in iso_global]
+
+# 1. Wczytaj probe_features.npz + probe_scores_oof z 04_probe.py
+# 2. Zamień global → local (patrz wyżej); sprawdź n_routing=9307, n_iso=4000
+# 3. Trenuj routing LR na routing_local
+# 4. Kalibruj: isotonic regression na iso_local
 #    → zapisz routing_lr.pkl + calibrator.pkl
 # 5. Wypisz nauczone wagi → do papieru
 # 6. Ablacja kalibracji: uncalibrated | Platt | isotonic | ROC-isotonic
