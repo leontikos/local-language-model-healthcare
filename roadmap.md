@@ -174,20 +174,22 @@ train_idx, probe_idx = train_test_split(
     all_idx, test_size=16000,
     stratify=subjects, random_state=42
 )
+# Uwaga: po exact-match dedup (2,693 duplikatów) faktyczne rozmiary:
+# train_ft=104,765  probe=13,307  (patrz data/splits/meta.json)
 
-train_ft  = train_single.select(train_idx)   # ~128K
-probe_set = train_single.select(probe_idx)   # 16K
+train_ft  = train_single.select(train_idx)   # 104,765 po dedup
+probe_set = train_single.select(probe_idx)   # 13,307 po dedup
 
 # Krok 3: podziel probe_set na routing_train i iso_cal
 probe_y = [int(normalize_example(ex, "medmcqa")[1] is not None)
            for ex in probe_set]  # placeholder, prawdziwe y po ekstrakcji
 
 routing_idx, iso_idx = train_test_split(
-    list(range(16000)), test_size=4000,
+    list(range(len(probe_set))), test_size=4000,
     random_state=42
 )
-# routing_train = probe_set.select(routing_idx)  # 12K
-# iso_cal       = probe_set.select(iso_idx)      # 4K
+# routing_train = probe_set.select(routing_idx)  # 9,307
+# iso_cal       = probe_set.select(iso_idx)      # 4,000
 ```
 
 ---
@@ -423,11 +425,11 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_auc_score
 
-# Dane z probe_set (16K)
-H_hidden = np.stack([ex["h"] for ex in probe_features])  # [16000, 4096]
-y_probe  = np.array([ex["y"] for ex in probe_features])  # [16000]
+# Dane z probe_set (13,307 po dedup — patrz data/splits/meta.json)
+H_hidden = np.stack([ex["h"] for ex in probe_features])  # [13307, 4096]
+y_probe  = np.array([ex["y"] for ex in probe_features])  # [13307]
 
-probe_scores_oof = np.zeros(16000)
+probe_scores_oof = np.zeros(len(probe_features))  # 13307
 
 kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
@@ -1268,8 +1270,8 @@ else:
 
 # 1. Wczytaj probe_features.npz
 # 2. 5-fold cross-fitting (StratifiedKFold, seed=42)
-#    → probe_scores_oof [16000]
-# 3. Final probe na pełnych 16K
+#    → probe_scores_oof [13307]
+# 3. Final probe na pełnych 13,307
 #    → zapisz jako checkpoints/final_probe.pkl
 # 4. Ablacja: MLP probe vs LR → raportuj AUROC obu
 # 5. Analiza korelacji sygnałów → decyzja o gap
@@ -1366,8 +1368,8 @@ else:
 
 [ ] KROK 3   Fine-tuning                       (1-2 dni, GPU PROFESORA ≥24GB)
              → python scripts/02_finetune.py
-             LoRA FP16, r=16, 3 epoki max, early stopping patience=5 @ accuracy
-             eval_steps=1300, save_steps=1300, bf16=True, paged_adamw_32bit
+             LoRA (bf16), r=16, 3 epoki max, early stopping patience=3 @ eval_loss
+             eval_steps=650, save_steps=650, bf16=True, adamw_torch
              Monitoring: W&B (student widzi postęp bez SSH)
              Output: checkpoints/final/ (~150MB LoRA adapter)
 

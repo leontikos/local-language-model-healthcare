@@ -529,8 +529,16 @@ def main() -> None:
     # ------------------------------------------------------------------
     model, tokenizer = _load_model(cfg, debug=args.debug)
 
-    yes_id = tokenizer.encode(" Yes", add_special_tokens=False)[-1]
-    no_id  = tokenizer.encode(" No",  add_special_tokens=False)[-1]
+    _yes_toks = tokenizer.encode(" Yes", add_special_tokens=False)
+    _no_toks  = tokenizer.encode(" No",  add_special_tokens=False)
+    if len(_yes_toks) != 1 or len(_no_toks) != 1:
+        log.warning(
+            "' Yes' tokenizes to %d tokens %s, ' No' to %d tokens %s. "
+            "p(True) will use the last token of each — consider --skip-ptrue.",
+            len(_yes_toks), _yes_toks, len(_no_toks), _no_toks,
+        )
+    yes_id = _yes_toks[-1]
+    no_id  = _no_toks[-1]
     log.info("yes_id=%d  no_id=%d  skip_ptrue=%s", yes_id, no_id, args.skip_ptrue)
 
     # ------------------------------------------------------------------

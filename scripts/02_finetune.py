@@ -228,12 +228,31 @@ def main() -> None:
         log.warning("No CUDA GPU detected — training will run on CPU (very slow)")
 
     log.info("Loading model: %s  dtype=%s", model_name, cfg["model"]["torch_dtype"])
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch_dtype,
-        device_map="auto",
-        attn_implementation=cfg["model"]["attn_implementation"],
-    )
+    _attn_impl = cfg["model"]["attn_implementation"]
+    try:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch_dtype,
+            device_map="auto",
+            attn_implementation=_attn_impl,
+        )
+        log.info("Attention implementation: %s", _attn_impl)
+    except ImportError as _fa2_err:
+        if "flash" in str(_fa2_err).lower():
+            log.warning(
+                "Flash Attention 2 not available (%s). "
+                "Falling back to eager attention. "
+                "Install with: pip install flash-attn --no-build-isolation",
+                _fa2_err,
+            )
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype=torch_dtype,
+                device_map="auto",
+                attn_implementation="eager",
+            )
+        else:
+            raise
     # Trainer sets use_cache=False automatically when gradient_checkpointing=True,
     # but setting it explicitly here suppresses the warning regardless.
     model.config.use_cache = False
