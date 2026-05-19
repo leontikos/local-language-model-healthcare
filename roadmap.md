@@ -213,7 +213,7 @@ from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
 # LoRA config
 lora_config = LoraConfig(
     r=16,
-    lora_alpha=16,
+    lora_alpha=32,              # 2×r — standard scaling
     target_modules=[
         "q_proj", "k_proj", "v_proj", "o_proj",
         "gate_proj", "up_proj", "down_proj"
@@ -237,7 +237,7 @@ training_args = TrainingArguments(
     logging_steps=100,
     save_strategy="epoch",
     save_total_limit=2,
-    optim="paged_adamw_32bit",
+    optim="adamw_torch",        # A100: szybszy niż paged_adamw (nie potrzebujemy page offload)
     dataloader_num_workers=4,
     max_grad_norm=1.0,
     report_to="wandb",                  # opcjonalnie
@@ -1448,10 +1448,10 @@ else:
 ```
 Metryka:       eval_loss   (NIE accuracy — SFTTrainer GitHub #1222: EarlyStoppingCallback
                             nie może używać custom compute_metrics z SFTTrainer)
-eval_steps:    1000        (~13 ewaluacji per epoka; 104K/8=13K kroków/epoka)
-save_steps:    1000        (MUSI = eval_steps gdy load_best_model_at_end=True)
-patience:      3            (eval EVENTS, nie epoki — przy eval_steps=1000:
-                            patience=3 = 3000 kroków ≈ 0.23 epoki; właściwa granularność)
+eval_steps:    650         (~10 ewaluacji per epoka; 104K/16=6.5K kroków/epoka)
+save_steps:    650         (MUSI = eval_steps gdy load_best_model_at_end=True)
+patience:      3            (eval EVENTS, nie epoki — przy eval_steps=650:
+                            patience=3 = 1950 kroków ≈ 0.30 epoki; właściwa granularność)
 greater_is_better: False   (minimalizujemy loss)
 bf16:          True        (A100: bfloat16 stabilniejszy niż fp16; fp16=False jawnie)
 fp16:          False       (jawnie wyłącz — unika konfliktów z bf16)
