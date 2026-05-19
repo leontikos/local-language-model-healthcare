@@ -133,15 +133,21 @@ MedMCQA raw train (~182,822)
     ▼ filter choice_type == "single"
     │ + ręczna weryfikacja 100 przykładów (error rate < 5%)
     │
-    ▼ (~144,000 próbek)
+    ▼ (120,765 próbek — choice_type='single' = 66.1% z 182,822; mniej niż zakładane ~80%)
     │
     ▼ stratified split po subject_name, seed=42
-    ├── train_ft  (~128,000) ─────────────────── FINE-TUNING ONLY
-    └── probe_set  (16,000)                       (model NIE widzi probe_set podczas FT)
+    │  → nominalne: train_ft 104K + probe 16K
+    │  → po exact-match dedup (2,693 duplikatów między train_ft i probe usunięte z probe):
+    │
+    ├── train_ft  (104,765) ─────────────────── FINE-TUNING ONLY
+    └── probe_set  (13,307, po dedup)            (model NIE widzi probe_set podczas FT)
               │
               ▼ dalszy podział (seed=42)
-              ├── routing_train (12,000) ── routing LR training
+              ├── routing_train  (9,307) ── routing LR training
               └── iso_cal        (4,000) ── isotonic regression calibration
+
+    Uwaga: nominalne rozmiary (128K / 16K / 12K) to cele przed dedup.
+    Faktyczne rozmiary po uruchomieniu 01_prepare.py: patrz data/splits/meta.json.
 
 MedMCQA val  (4,183) ─── WYŁĄCZNIE conformal calibration (q_hat)
 MedMCQA test (6,150) ─── in-distribution evaluation

@@ -133,6 +133,13 @@ def main() -> None:
     cfg = _load_config(args.overrides)
     seed: int = cfg["seed"]
 
+    # Guard: load_best_model_at_end=True requires save_steps == eval_steps
+    assert cfg["training"]["eval_steps"] == cfg["training"]["save_steps"], (
+        f"eval_steps ({cfg['training']['eval_steps']}) must equal "
+        f"save_steps ({cfg['training']['save_steps']}) "
+        "when load_best_model_at_end=True — override both together."
+    )
+
     # Apply debug overrides
     if args.debug:
         log.info("DEBUG MODE — small dataset, fast eval, no GPU required")
