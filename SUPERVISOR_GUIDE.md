@@ -82,11 +82,11 @@ This requires ≥16 GB VRAM and takes ~2-3 days on an RTX 3090.
 To verify the environment is correctly configured before committing to the full run:
 
 ```bash
-python scripts/02_finetune.py --debug   # 512 examples, 1 eval step, ~5 minutes
-python scripts/03_extract.py --debug    # 50 examples per split, ~10 minutes
+python scripts/02_finetune.py --debug   # 512 examples, 1 eval step, ~5 minutes on GPU
+python scripts/03_extract.py --debug    # 50 examples per split, ~10 minutes on GPU
 ```
 
-No GPU required for the debug run — it will fall back to CPU automatically.
+Still requires GPU — `--debug` only reduces dataset size, the full 7B model is still loaded.
 
 ---
 
