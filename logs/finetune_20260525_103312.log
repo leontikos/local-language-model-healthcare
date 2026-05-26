@@ -1,0 +1,37 @@
+10:33:12  [rank0]  INFO  Log file: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/finetune_20260525_103312.log
+10:33:12  [rank0]  INFO  DDP world_size=4  local_rank=0
+10:33:12  [rank0]  INFO  Loaded config: configs/finetune_config_ddp.yaml
+10:33:16  [rank0]  INFO  Logging to TensorBoard (WANDB_API_KEY not set)
+10:33:16  [rank0]  INFO  Loading tokenizer: mistralai/Mistral-7B-Instruct-v0.3
+10:33:16  [rank0]  INFO  Response template 'Answer:' → token IDs: [27075, 29515]
+10:33:16  [rank0]  INFO  Response template ' Answer:' → token IDs: [27075, 29515]
+10:33:16  [rank0]  INFO  GPU: NVIDIA L4  (23.7 GB VRAM)
+10:33:16  [rank0]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:33:16  [rank0]  INFO  Loading model: mistralai/Mistral-7B-Instruct-v0.3  dtype=bfloat16
+10:33:20  [rank0]  INFO  Attention implementation: sdpa  device_map={'': 0}
+10:33:22  [rank0]  INFO  Loading MedMCQA …
+10:33:23  [rank0]  INFO  train_ft: 102765 examples  ft_val: 2000 examples (carved from train_ft, seed=42)
+10:33:23  [rank0]  INFO  MedMCQA val (4183) → reserved ONLY for conformal calibration, not used here.
+10:33:23  [rank0]  INFO  Dataset sizes — train: 102765  val: 2000
+10:33:23  [rank0]  INFO  Early-stopping plan: patience=6 evals × eval_steps=650 (window = 3900 steps); no-stop floor = 6422 steps (≥ 1.00 epochs of training)
+10:33:25  [rank0]  INFO  Starting training …
+10:42:13  [rank0]  INFO  Skipping early-stop check at step 650 (< min_steps 6422, ~1.0 epoch warmup)
+10:50:46  [rank0]  INFO  Skipping early-stop check at step 1300 (< min_steps 6422, ~1.0 epoch warmup)
+10:59:20  [rank0]  INFO  Skipping early-stop check at step 1950 (< min_steps 6422, ~1.0 epoch warmup)
+11:07:56  [rank0]  INFO  Skipping early-stop check at step 2600 (< min_steps 6422, ~1.0 epoch warmup)
+11:16:36  [rank0]  INFO  Skipping early-stop check at step 3250 (< min_steps 6422, ~1.0 epoch warmup)
+11:25:08  [rank0]  INFO  Skipping early-stop check at step 3900 (< min_steps 6422, ~1.0 epoch warmup)
+11:33:41  [rank0]  INFO  Skipping early-stop check at step 4550 (< min_steps 6422, ~1.0 epoch warmup)
+11:42:16  [rank0]  INFO  Skipping early-stop check at step 5200 (< min_steps 6422, ~1.0 epoch warmup)
+11:50:52  [rank0]  INFO  Skipping early-stop check at step 5850 (< min_steps 6422, ~1.0 epoch warmup)
+12:42:11  [rank0]  INFO  Saving best model to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final …
+12:42:11  [rank0]  INFO  Metadata saved to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final/finetune_metadata.json
+12:42:11  [rank0]  INFO  ============================================================
+12:42:11  [rank0]  INFO  KROK 3 DONE
+12:42:11  [rank0]  INFO    Best eval_loss:  1.0742
+12:42:11  [rank0]  INFO    Steps trained:   9750
+12:42:11  [rank0]  INFO    Early stopped:   True
+12:42:11  [rank0]  INFO    Checkpoint:      /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+12:42:11  [rank0]  INFO  ============================================================
+12:42:11  [rank0]  INFO  Next: python scripts/00_verify.py --blocker 3
+12:42:11  [rank0]  INFO  Then: python scripts/03_extract.py

@@ -13,5 +13,8 @@
     1102,
     1152
   ],
-  "blocker_2_done": true
+  "blocker_2_done": true,
+  "p_true_verdict": "INCLUDE",
+  "p_true_mean_mass": 1.0,
+  "blocker_3_done": true
 }

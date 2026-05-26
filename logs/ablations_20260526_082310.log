@@ -1,0 +1,103 @@
+08:23:12  INFO  Loading artefacts …
+08:23:12  INFO  Table 1 — Signal subset ablation
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:13  INFO    H                               in-dist AUROC=0.7429 AUGRC=0.1561 local_rate=0.777  OOD-near AUROC=0.6976  OOD-far AUROC=0.7822
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:14  INFO    probe                           in-dist AUROC=0.7218 AUGRC=0.1608 local_rate=0.818  OOD-near AUROC=0.6812  OOD-far AUROC=0.7683
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:15  INFO    p_true                          in-dist AUROC=0.5931 AUGRC=0.1926 local_rate=0.907  OOD-near AUROC=0.5749  OOD-far AUROC=0.6213
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:16  INFO    H+probe                         in-dist AUROC=0.7419 AUGRC=0.1565 local_rate=0.943  OOD-near AUROC=0.6951  OOD-far AUROC=0.7817
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:17  INFO    H+probe+p_true                  in-dist AUROC=0.7407 AUGRC=0.1567 local_rate=0.936  OOD-near AUROC=0.6947  OOD-far AUROC=0.7825
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+08:23:18  INFO    H+gap+probe+p_true              in-dist AUROC=0.7410 AUGRC=0.1569 local_rate=0.954  OOD-near AUROC=0.6951  OOD-far AUROC=0.7851
+08:23:18  INFO  Table 2 — Calibration method ablation
+08:23:18  INFO    regcal not installed — skipping roc_isotonic
+08:23:18  INFO    uncalibrated        in-dist Brier=0.2053 ECE=0.0576  near-OOD Brier=0.2298  far-OOD Brier=0.1709
+08:23:18  INFO    isotonic_vanilla    in-dist Brier=0.2041 ECE=0.0548  near-OOD Brier=0.2301  far-OOD Brier=0.1705
+08:23:18  INFO    platt               in-dist Brier=0.2088 ECE=0.0709  near-OOD Brier=0.2358  far-OOD Brier=0.1736
+08:23:18  INFO  Table 3 — Split-CP global vs Mondrian per-domain
+08:23:18  INFO    in_dist:  split-global local_rate=0.793   mondrian local_rate=0.879
+08:23:18  INFO    near_OOD:  split-global local_rate=0.906   mondrian local_rate=0.907
+08:23:18  INFO    far_OOD:  split-global local_rate=0.921   mondrian local_rate=0.921
+08:23:18  INFO  Table 4 — Probe architecture (LR vs MLP)
+08:23:20  INFO    MLP fold 1/5: fold AUROC=0.8098
+08:23:22  INFO    MLP fold 2/5: fold AUROC=0.7863
+08:23:23  INFO    MLP fold 3/5: fold AUROC=0.7860
+08:23:25  INFO    MLP fold 4/5: fold AUROC=0.8018
+08:23:26  INFO    MLP fold 5/5: fold AUROC=0.7794
+08:23:26  INFO    LR AUROC=0.7920  MLP AUROC=0.7906  Δ=-0.0014  → Keep LR (Δ ≤ 0.02 — MLP not worth complexity)
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/08_ablations.py:433: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+08:23:26  INFO  Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/ablations.json
+
+================================================================================
+KROK 9 — ABLATION RESULTS
+================================================================================
+
+Table 1 — Signal subset (in-dist results @ α=0.10)
+  Subset                           AUROC     AUGRC     Brier    local_rate
+  H                               0.7429    0.1561    0.2045        0.7767
+  probe                           0.7218    0.1608    0.2101        0.8181
+  p_true                          0.5931    0.1926    0.2597        0.9075
+  H+probe                         0.7419    0.1565    0.2053        0.9433
+  H+probe+p_true                  0.7407    0.1567    0.2059        0.9364  ← deployed
+  H+gap+probe+p_true              0.7410    0.1569    0.2045        0.9539
+
+Table 2 — Calibration method (Brier ↓ / ECE ↓)
+  Method               in-dist Brier   in-dist ECE    near Brier     far Brier
+  uncalibrated                0.2053        0.0576        0.2298        0.1709
+  isotonic_vanilla            0.2041        0.0548        0.2301        0.1705
+  platt                       0.2088        0.0709        0.2358        0.1736
+
+Table 3 — CP variant (local_rate, CP target ≥ 0.90 at α=0.10)
+  Method                 in-dist    near-OOD     far-OOD
+  split_global            0.7927      0.9065      0.9206
+  mondrian                0.8786      0.9073      0.9206
+
+Table 4 — Probe architecture (5-fold OOF on probe_set, n=13,307)
+  LR    AUROC=0.7920  Brier=0.1578
+  MLP   AUROC=0.7906  Brier=0.1575
+  Δ AUROC = -0.0014   → Keep LR (Δ ≤ 0.02 — MLP not worth complexity)
+
+Table 5 — Layer sweep (already in layer_sweep.json)
+  Layer  8: AUROC=0.6381
+  Layer 16: AUROC=0.7016
+  Layer 24: AUROC=0.7370  ← best
+  Layer 30: AUROC=0.7178
+  Layer 31: AUROC=0.7183
+
+================================================================================
+Full results → /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/ablations.json
+================================================================================

@@ -1,0 +1,28 @@
+08:19:27  INFO  val: n=4183  mean routing_score=0.6161  acc=0.5687
+08:19:27  INFO  Setup A (cal=probe_set, test=val):  q_hat=0.5814  local_rate=0.7927  local_acc=0.6339
+08:19:27  INFO    Fold 1: |cal|=3346 |test|=837  q_hat=0.6744  local_rate=0.9140  local_acc=0.6026
+08:19:27  INFO    Fold 2: |cal|=3346 |test|=837  q_hat=0.6744  local_rate=0.9020  local_acc=0.6026
+08:19:27  INFO    Fold 3: |cal|=3346 |test|=837  q_hat=0.6744  local_rate=0.9307  local_acc=0.5944
+08:19:27  INFO    Fold 4: |cal|=3347 |test|=836  q_hat=0.6744  local_rate=0.9091  local_acc=0.5921
+08:19:27  INFO    Fold 5: |cal|=3347 |test|=836  q_hat=0.6744  local_rate=0.9163  local_acc=0.5992
+08:19:27  INFO  Setup B (cal=val K-fold, test=val held-out): mean q_hat=0.6744  local_rate=0.9144  local_acc=0.5982
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/07b_exchangeability_check.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+08:19:27  INFO  Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/exchangeability_check.json
+
+========================================================================
+CP exchangeability diagnostic on MedMCQA val (n=4183, α=0.1)
+========================================================================
+Setup                                             q_hat    local_rate   local_acc
+------------------------------------------------------------------------
+A: cal=probe_set (KROK 7 original)               0.5814        0.7927      0.6339
+  95% CI on local_rate                       [0.7805, 0.8052]
+
+B: cal=val (5-fold cross-CP)                     0.6744        0.9144      0.5982
+  95% CI on local_rate                       [0.9051, 0.9230]
+  per-fold local_rates: ['0.914', '0.902', '0.931', '0.909', '0.916']
+
+  CP target (1 − α) = 0.90
+  Setup A MISSES target by -0.1073
+  Setup B meets target by +0.0144
+========================================================================

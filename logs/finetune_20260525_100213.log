@@ -1,0 +1,28 @@
+10:02:13  [rank0]  INFO  Log file: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/finetune_20260525_100213.log
+10:02:13  [rank0]  INFO  DDP world_size=4  local_rank=0
+10:02:13  [rank0]  INFO  Loaded config: configs/finetune_config_ddp.yaml
+10:02:13  [rank0]  INFO  DEBUG MODE — small dataset, fast eval, no GPU required
+10:02:16  [rank0]  INFO  Logging to TensorBoard (WANDB_API_KEY not set)
+10:02:16  [rank0]  INFO  Loading tokenizer: mistralai/Mistral-7B-Instruct-v0.3
+10:02:17  [rank0]  INFO  Response template 'Answer:' → token IDs: [27075, 29515]
+10:02:17  [rank0]  INFO  Response template ' Answer:' → token IDs: [27075, 29515]
+10:02:18  [rank0]  INFO  GPU: NVIDIA L4  (23.7 GB VRAM)
+10:02:18  [rank0]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:02:18  [rank0]  INFO  Loading model: mistralai/Mistral-7B-Instruct-v0.3  dtype=bfloat16
+10:02:22  [rank0]  INFO  Attention implementation: sdpa  device_map={'': 0}
+10:02:24  [rank0]  INFO  Loading MedMCQA …
+10:02:28  [rank0]  INFO  train_ft: 102765 examples  ft_val: 2000 examples (carved from train_ft, seed=42)
+10:02:28  [rank0]  INFO  MedMCQA val (4183) → reserved ONLY for conformal calibration, not used here.
+10:02:28  [rank0]  INFO  DEBUG: train=256  val=64
+10:02:28  [rank0]  INFO  Starting training …
+10:02:52  [rank0]  INFO  Saving best model to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final …
+10:02:53  [rank0]  INFO  Metadata saved to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final/finetune_metadata.json
+10:02:53  [rank0]  INFO  ============================================================
+10:02:53  [rank0]  INFO  KROK 3 DONE
+10:02:53  [rank0]  INFO    Best eval_loss:  1.1433
+10:02:53  [rank0]  INFO    Steps trained:   32
+10:02:53  [rank0]  INFO    Early stopped:   True
+10:02:53  [rank0]  INFO    Checkpoint:      /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+10:02:53  [rank0]  INFO  ============================================================
+10:02:53  [rank0]  INFO  Next: python scripts/00_verify.py --blocker 3
+10:02:53  [rank0]  INFO  Then: python scripts/03_extract.py

@@ -40,11 +40,11 @@ log = logging.getLogger(__name__)
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _load_config(extra_overrides: list[str]) -> dict:
-    """Load configs/finetune_config.yaml and apply CLI key=value overrides."""
+def _load_config(extra_overrides: list[str], config_name: str = "finetune_config.yaml") -> dict:
+    """Load configs/<config_name> and apply CLI key=value overrides."""
     from omegaconf import OmegaConf
 
-    cfg_path = Path(__file__).parent.parent / "configs" / "finetune_config.yaml"
+    cfg_path = Path(__file__).parent.parent / "configs" / config_name
     cfg = OmegaConf.load(cfg_path)
 
     for override in extra_overrides:
@@ -112,11 +112,29 @@ def _format_example(row: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    # DDP rank detection — torchrun sets these env vars.
+    local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+    world_size = int(os.environ.get("WORLD_SIZE", "1"))
+    is_main_process = local_rank == 0
+
+    # Console logging (all ranks) + file logging on rank 0 only.
+    log_handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
+    if is_main_process:
+        log_dir = Path(__file__).parent.parent / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / f"finetune_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.log"
+        log_handlers.append(logging.FileHandler(log_file, mode="w"))
+
     logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s  %(levelname)s  %(message)s",
+        level=logging.INFO if is_main_process else logging.WARNING,
+        format=f"%(asctime)s  [rank{local_rank}]  %(levelname)s  %(message)s",
         datefmt="%H:%M:%S",
+        handlers=log_handlers,
+        force=True,
     )
+    if is_main_process:
+        log.info("Log file: %s", log_file)
+        log.info("DDP world_size=%d  local_rank=%d", world_size, local_rank)
 
     # ------------------------------------------------------------------
     # 1. Parse arguments
@@ -126,12 +144,16 @@ def main() -> None:
                         help="Resume from last checkpoint in checkpoint_dir")
     parser.add_argument("--debug", action="store_true",
                         help="Smoke-test mode: small dataset, 1 eval step, no GPU needed")
+    parser.add_argument("--config", default="finetune_config.yaml",
+                        help="YAML file under configs/ (e.g. finetune_config_ddp.yaml)")
     # Catch key=value overrides (e.g. training.learning_rate=1e-4)
     parser.add_argument("overrides", nargs="*", help="OmegaConf-style key=value overrides")
     args = parser.parse_args()
 
-    cfg = _load_config(args.overrides)
+    cfg = _load_config(args.overrides, config_name=args.config)
     seed: int = cfg["seed"]
+    if is_main_process:
+        log.info("Loaded config: configs/%s", args.config)
 
     # Guard: load_best_model_at_end=True requires save_steps == eval_steps
     assert cfg["training"]["eval_steps"] == cfg["training"]["save_steps"], (
@@ -170,10 +192,10 @@ def main() -> None:
     set_seed(seed)
 
     # ------------------------------------------------------------------
-    # 3. W&B setup (graceful fallback to tensorboard)
+    # 3. W&B setup (graceful fallback to tensorboard) — rank 0 only
     # ------------------------------------------------------------------
     report_to: list[str]
-    if os.environ.get("WANDB_API_KEY"):
+    if is_main_process and os.environ.get("WANDB_API_KEY"):
         import wandb
         wandb.init(
             project=cfg["wandb"]["project"],
@@ -191,7 +213,8 @@ def main() -> None:
         log.info("W&B enabled — project: %s / run: %s",
                  cfg["wandb"]["project"], cfg["wandb"]["run_name"])
     else:
-        log.warning("WANDB_API_KEY not set — logging to TensorBoard only")
+        if is_main_process:
+            log.info("Logging to TensorBoard (WANDB_API_KEY not set)")
         report_to = ["tensorboard"]
 
     # ------------------------------------------------------------------
@@ -229,26 +252,28 @@ def main() -> None:
 
     log.info("Loading model: %s  dtype=%s", model_name, cfg["model"]["torch_dtype"])
     _attn_impl = cfg["model"]["attn_implementation"]
+    # Under DDP each rank owns one full model copy on its own GPU; "auto" would
+    # shard layers across GPUs and break DDP. With world_size=1 we keep "auto".
+    _device_map = {"": local_rank} if world_size > 1 else "auto"
     try:
         model = AutoModelForCausalLM.from_pretrained(
             model_name,
             torch_dtype=torch_dtype,
-            device_map="auto",
+            device_map=_device_map,
             attn_implementation=_attn_impl,
         )
-        log.info("Attention implementation: %s", _attn_impl)
-    except ImportError as _fa2_err:
+        log.info("Attention implementation: %s  device_map=%s", _attn_impl, _device_map)
+    except (ImportError, ValueError) as _fa2_err:
         if "flash" in str(_fa2_err).lower():
             log.warning(
-                "Flash Attention 2 not available (%s). "
-                "Falling back to eager attention. "
+                "Flash Attention 2 not available (%s). Falling back to eager. "
                 "Install with: pip install flash-attn --no-build-isolation",
                 _fa2_err,
             )
             model = AutoModelForCausalLM.from_pretrained(
                 model_name,
                 torch_dtype=torch_dtype,
-                device_map="auto",
+                device_map=_device_map,
                 attn_implementation="eager",
             )
         else:
@@ -354,6 +379,10 @@ def main() -> None:
     checkpoint_dir = _project_root / cfg["paths"]["checkpoint_dir"]
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
+    # gradient_checkpointing + LoRA + DDP requires non-reentrant checkpoint
+    # otherwise DDP "marked as ready twice" errors fire on backward.
+    _gc_kwargs = {"use_reentrant": False} if t["gradient_checkpointing"] else None
+
     training_args = TrainingArguments(
         output_dir=str(checkpoint_dir),
         num_train_epochs=t["num_train_epochs"],
@@ -373,6 +402,7 @@ def main() -> None:
         save_strategy="steps",
         save_steps=t["save_steps"],         # MUST equal eval_steps
         save_total_limit=t["save_total_limit"],
+        save_only_model=t.get("save_only_model", False),  # drop optimizer state from intermediates
         load_best_model_at_end=t["load_best_model_at_end"],
         metric_for_best_model=t["metric_for_best_model"],   # "eval_loss"
         greater_is_better=t["greater_is_better"],           # False (minimize loss)
@@ -380,13 +410,19 @@ def main() -> None:
         bf16=t["bf16"],
         fp16=t["fp16"],                     # explicitly False — avoids bf16/fp16 conflict
         gradient_checkpointing=t["gradient_checkpointing"],
+        gradient_checkpointing_kwargs=_gc_kwargs,
 
         dataloader_num_workers=t["dataloader_num_workers"],
         group_by_length=t["group_by_length"],
 
+        # DDP knobs (only relevant when world_size > 1; harmless otherwise)
+        ddp_find_unused_parameters=t.get("ddp_find_unused_parameters", False),
+        ddp_bucket_cap_mb=t.get("ddp_bucket_cap_mb", 25),
+
         logging_steps=t["logging_steps"],
         report_to=report_to,
         run_name=cfg["wandb"]["run_name"],
+        disable_tqdm=not is_main_process,   # progress bar only on rank 0
 
         seed=seed,
         data_seed=seed,
@@ -400,11 +436,51 @@ def main() -> None:
     # SFTTrainer GitHub #1222: custom compute_metrics CANNOT be used with
     # EarlyStoppingCallback in SFTTrainer — that's why we use eval_loss here.
     # mean_token_accuracy is logged automatically by SFTTrainer and visible in W&B.
+
+    class MinStepsEarlyStoppingCallback(EarlyStoppingCallback):
+        """EarlyStoppingCallback that ignores eval results until min_steps have passed.
+
+        Prevents premature stopping during LR warmup when eval_loss is intrinsically
+        noisy. After min_steps, behaves exactly like the parent class.
+        """
+        def __init__(self, min_steps: int, **kwargs):
+            super().__init__(**kwargs)
+            self.min_steps = min_steps
+
+        def on_evaluate(self, args, state, control, metrics, **kwargs):
+            if state.global_step < self.min_steps:
+                if is_main_process and state.global_step > 0:
+                    log.info(
+                        "Skipping early-stop check at step %d (< min_steps %d, ~%.1f epoch warmup)",
+                        state.global_step, self.min_steps, self.min_steps / max(state.max_steps / t["num_train_epochs"], 1),
+                    )
+                return
+            return super().on_evaluate(args, state, control, metrics, **kwargs)
+
+    # Compute the no-stop window: at least min_train_epochs_for_early_stop full epochs.
+    # steps_per_epoch is roughly len(train) / effective_batch_size.
+    _eff_batch = (
+        t["per_device_train_batch_size"]
+        * t["gradient_accumulation_steps"]
+        * max(world_size, 1)
+    )
+    _steps_per_epoch = max(len(train_ds) // _eff_batch, 1)
+    _min_train_epochs = float(t.get("min_train_epochs_for_early_stop", 0.0))
+    _min_steps_no_stop = int(_min_train_epochs * _steps_per_epoch)
+
+    if is_main_process:
+        log.info(
+            "Early-stopping plan: patience=%d evals × eval_steps=%d (window = %d steps); "
+            "no-stop floor = %d steps (≥ %.2f epochs of training)",
+            t["early_stopping_patience"], t["eval_steps"],
+            t["early_stopping_patience"] * t["eval_steps"],
+            _min_steps_no_stop, _min_train_epochs,
+        )
+
     callbacks = [
-        EarlyStoppingCallback(
+        MinStepsEarlyStoppingCallback(
+            min_steps=_min_steps_no_stop,
             early_stopping_patience=t["early_stopping_patience"],
-            # patience=3 eval events at eval_steps=650 → stop after 1950 steps
-            # without improvement ≈ 0.3 epochs — responsive but not over-aggressive.
         )
     ]
 

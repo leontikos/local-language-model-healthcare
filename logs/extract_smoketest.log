@@ -1,0 +1,204 @@
+W0526 05:59:05.325000 1430460 site-packages/torch/distributed/run.py:792] 
+W0526 05:59:05.325000 1430460 site-packages/torch/distributed/run.py:792] *****************************************
+W0526 05:59:05.325000 1430460 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0526 05:59:05.325000 1430460 site-packages/torch/distributed/run.py:792] *****************************************
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py:670: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  log_file = log_dir / f"extract_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.log"
+05:59:05  [rank0]  INFO  DDP world_size=4  local_rank=0  log_file=/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/extract_20260526_055905.log
+05:59:08  [rank0]  INFO  GPU[0]: NVIDIA L4  (23.7 GB VRAM)
+05:59:08  [rank0]  INFO  Loading tokenizer from /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+05:59:08  [rank0]  INFO  Verifying token IDs A/B/C/D …
+05:59:08  [rank0]  INFO    ✓ Token IDs verified: A=1098  B=1133  C=1102  D=1152
+05:59:08  [rank0]  INFO  Loading base model: mistralai/Mistral-7B-Instruct-v0.3  dtype=bfloat16  device_map={'': 0}  attn=sdpa
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:02,  1.13s/it]Loading checkpoint shards:  33%|███▎      | 1/3 [00:00<00:01,  1.03it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:02,  1.02s/it]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:02,  1.14s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.15s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.05s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.10s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.09s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.04s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.05s/it]
+Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.09s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.07s/it]
+Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.15s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.15s/it]
+05:59:12  [rank0]  INFO  Loading LoRA adapter from /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.04it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.01s/it]
+05:59:14  [rank0]  INFO  Merging LoRA weights into base model (faster inference) …
+05:59:15  [rank0]  INFO  yes_id=6360  no_id=2538  skip_ptrue=False
+05:59:15  [rank0]  INFO  Loading MedMCQA dataset …
+Filter (num_proc=4):   0%|          | 0/182822 [00:00<?, ? examples/s]Filter (num_proc=4):   2%|▏         | 4000/182822 [00:00<00:06, 27231.72 examples/s]Filter (num_proc=4):  23%|██▎       | 42000/182822 [00:00<00:00, 194283.32 examples/s]Filter (num_proc=4):   0%|          | 0/182822 [00:00<?, ? examples/s]Filter (num_proc=4):   0%|          | 0/182822 [00:00<?, ? examples/s]Filter (num_proc=4):  45%|████▍     | 82000/182822 [00:00<00:00, 271474.63 examples/s]Filter (num_proc=4):   2%|▏         | 3000/182822 [00:00<00:09, 18807.58 examples/s]Filter (num_proc=4):   2%|▏         | 4000/182822 [00:00<00:07, 23506.85 examples/s]Filter (num_proc=4):  67%|██████▋   | 122000/182822 [00:00<00:00, 308631.94 examples/s]Filter (num_proc=4):  20%|██        | 37000/182822 [00:00<00:00, 164545.64 examples/s]Filter (num_proc=4):  20%|█▉        | 36000/182822 [00:00<00:00, 151387.79 examples/s]Filter (num_proc=4):  87%|████████▋ | 159411/182822 [00:00<00:00, 313401.39 examples/s]Filter (num_proc=4):  39%|███▉      | 71000/182822 [00:00<00:00, 219996.47 examples/s]Filter (num_proc=4):  39%|███▉      | 72000/182822 [00:00<00:00, 226392.98 examples/s]Filter (num_proc=4):  61%|██████    | 111000/182822 [00:00<00:00, 276932.31 examples/s]Filter (num_proc=4):  60%|█████▉    | 109000/182822 [00:00<00:00, 269671.40 examples/s]Filter (num_proc=4): 100%|██████████| 182822/182822 [00:00<00:00, 221330.89 examples/s]
+Filter (num_proc=4):  84%|████████▍ | 154412/182822 [00:00<00:00, 322971.77 examples/s]Filter (num_proc=4):  83%|████████▎ | 151706/182822 [00:00<00:00, 315478.36 examples/s]Filter (num_proc=4): 100%|██████████| 182822/182822 [00:00<00:00, 213878.72 examples/s]
+Filter (num_proc=4): 100%|██████████| 182822/182822 [00:00<00:00, 211433.29 examples/s]
+05:59:17  [rank0]  INFO  Probe set loaded: 13307 examples
+05:59:17  [rank0]  INFO  DEBUG mode — using layer 31 (sweep skipped)
+05:59:17  [rank0]  INFO  
+============================================================
+Extracting: probe
+============================================================
+05:59:17  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:17  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+  medmcqa (rank0 shard):   0%|          | 0/13 [00:00<?, ?it/s]  medmcqa (rank0 shard):   8%|▊         | 1/13 [00:00<00:06,  1.92it/s]  medmcqa (rank0 shard):  15%|█▌        | 2/13 [00:00<00:03,  3.31it/s]  medmcqa (rank0 shard):  23%|██▎       | 3/13 [00:00<00:02,  4.31it/s]  medmcqa (rank0 shard):  31%|███       | 4/13 [00:00<00:01,  5.01it/s]  medmcqa (rank0 shard):  38%|███▊      | 5/13 [00:01<00:01,  5.51it/s]  medmcqa (rank0 shard):  46%|████▌     | 6/13 [00:01<00:01,  5.91it/s]  medmcqa (rank0 shard):  54%|█████▍    | 7/13 [00:01<00:00,  6.13it/s]  medmcqa (rank0 shard):  62%|██████▏   | 8/13 [00:01<00:00,  6.28it/s]  medmcqa (rank0 shard):  69%|██████▉   | 9/13 [00:01<00:00,  6.27it/s]  medmcqa (rank0 shard):  77%|███████▋  | 10/13 [00:01<00:00,  6.38it/s][rank1]:[W526 05:59:19.416232481 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 1]  using GPU 1 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+  medmcqa (rank0 shard):  85%|████████▍ | 11/13 [00:02<00:00,  6.48it/s][rank3]:[W526 05:59:19.501535063 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 3]  using GPU 3 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+  medmcqa (rank0 shard):  92%|█████████▏| 12/13 [00:02<00:00,  6.55it/s][rank2]:[W526 05:59:19.659703339 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 2]  using GPU 2 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+  medmcqa (rank0 shard): 100%|██████████| 13/13 [00:02<00:00,  6.58it/s]  medmcqa (rank0 shard): 100%|██████████| 13/13 [00:02<00:00,  5.59it/s]
+[rank0]:[W526 05:59:19.792465375 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+NCCL version 2.21.5+cuda12.4
+05:59:20  [rank0]  INFO    Stitching probe: 50 examples from 4 shards
+05:59:20  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_features.npz  (50 examples)
+05:59:20  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_hidden.npy  shape=(50, 4096)  (1 MB)
+05:59:20  [rank0]  INFO  
+============================================================
+Extracting: val
+============================================================
+05:59:20  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:20  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+  medmcqa (rank0 shard):   0%|          | 0/13 [00:00<?, ?it/s]  medmcqa (rank0 shard):   8%|▊         | 1/13 [00:00<00:01,  6.35it/s]  medmcqa (rank0 shard):  15%|█▌        | 2/13 [00:00<00:01,  6.49it/s]  medmcqa (rank0 shard):  23%|██▎       | 3/13 [00:00<00:01,  6.62it/s]  medmcqa (rank0 shard):  31%|███       | 4/13 [00:00<00:01,  6.66it/s]  medmcqa (rank0 shard):  38%|███▊      | 5/13 [00:00<00:01,  6.54it/s]  medmcqa (rank0 shard):  46%|████▌     | 6/13 [00:00<00:01,  6.54it/s]  medmcqa (rank0 shard):  54%|█████▍    | 7/13 [00:01<00:00,  6.57it/s]  medmcqa (rank0 shard):  62%|██████▏   | 8/13 [00:01<00:00,  6.54it/s]  medmcqa (rank0 shard):  69%|██████▉   | 9/13 [00:01<00:00,  6.56it/s]  medmcqa (rank0 shard):  77%|███████▋  | 10/13 [00:01<00:00,  6.49it/s]  medmcqa (rank0 shard):  85%|████████▍ | 11/13 [00:01<00:00,  6.52it/s]  medmcqa (rank0 shard):  92%|█████████▏| 12/13 [00:01<00:00,  6.59it/s]  medmcqa (rank0 shard): 100%|██████████| 13/13 [00:01<00:00,  6.61it/s]  medmcqa (rank0 shard): 100%|██████████| 13/13 [00:01<00:00,  6.56it/s]
+05:59:22  [rank0]  INFO    Stitching val: 50 examples from 4 shards
+05:59:22  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/val_features.npz  (50 examples)
+05:59:22  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/val_hidden.npy  shape=(50, 4096)  (1 MB)
+05:59:22  [rank0]  INFO  
+============================================================
+Extracting: test_medmcqa
+============================================================
+05:59:22  [rank3]  WARNING    Skipping example 3: Invalid cop=-1 in id=21fe4c49-f0cd-4c31-8eec-3966bbfb963e
+05:59:22  [rank3]  WARNING    Skipping example 7: Invalid cop=-1 in id=f2b6b487-dc9b-47b7-ab30-7bce3db954cb
+05:59:22  [rank3]  WARNING    Skipping example 11: Invalid cop=-1 in id=f2974fa8-3bff-4b4b-b544-4fee7eebade4
+05:59:22  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:22  [rank3]  WARNING    Skipping example 15: Invalid cop=-1 in id=ebef47ee-8bd7-4c21-9a4d-d7dcfd78fdaf
+05:59:22  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+05:59:22  [rank3]  WARNING    Skipping example 19: Invalid cop=-1 in id=a62cba7b-5499-4ae8-a92a-2a7564926934
+05:59:22  [rank3]  WARNING    Skipping example 23: Invalid cop=-1 in id=82d91524-3a0d-4952-9faa-6e67bfc6f771
+  medmcqa (rank0 shard):   0%|          | 0/13 [00:00<?, ?it/s]05:59:22  [rank3]  WARNING    Skipping example 27: Invalid cop=-1 in id=4eca5b14-4368-44a3-b44a-dd82ab4e2810
+05:59:22  [rank3]  WARNING    Skipping example 31: Invalid cop=-1 in id=55c67962-ea0f-4b89-ab71-274d8faf3488
+05:59:22  [rank0]  WARNING    Skipping example 0: Invalid cop=-1 in id=84f328d3-fca4-422d-8fb2-19d55eb31503
+05:59:22  [rank3]  WARNING    Skipping example 35: Invalid cop=-1 in id=26b5ddb5-a93f-4c0e-930e-53cb61d2b7fe
+05:59:22  [rank3]  WARNING    Skipping example 39: Invalid cop=-1 in id=7b863514-4f5e-457d-ab73-375da249ec5a
+05:59:22  [rank0]  WARNING    Skipping example 4: Invalid cop=-1 in id=9c82e23e-714e-422b-a4fa-e89aef919819
+05:59:22  [rank3]  WARNING    Skipping example 43: Invalid cop=-1 in id=e220f29e-e63f-4bbe-8305-f0fd4dc002f1
+05:59:22  [rank0]  WARNING    Skipping example 8: Invalid cop=-1 in id=a7dfee1b-f9df-44ed-942c-30b4cddbba01
+05:59:22  [rank3]  WARNING    Skipping example 47: Invalid cop=-1 in id=fa887833-a043-4b87-b0c8-1b6b8d7934b5
+05:59:22  [rank0]  WARNING    Skipping example 12: Invalid cop=-1 in id=8e07667a-9fb5-42ec-a2cc-5fb3e7068ea2
+05:59:22  [rank0]  WARNING    Skipping example 16: Invalid cop=-1 in id=c5db9b96-6df7-429d-ad14-d98a4511de84
+05:59:22  [rank0]  WARNING    Skipping example 20: Invalid cop=-1 in id=d63cd672-f3cb-4181-83af-ce91d9eda768
+05:59:22  [rank0]  WARNING    Skipping example 24: Invalid cop=-1 in id=1fa9d7dc-9661-422b-b668-247425b47a4f
+05:59:22  [rank0]  WARNING    Skipping example 28: Invalid cop=-1 in id=533f226b-6108-46be-9375-507ed9c7a163
+05:59:22  [rank1]  WARNING    Skipping example 1: Invalid cop=-1 in id=bb85e248-b2e9-48e8-a887-67c1aff15b6d
+05:59:22  [rank0]  WARNING    Skipping example 32: Invalid cop=-1 in id=6374f514-0727-4ddf-896e-ef6798ec8d79
+05:59:22  [rank0]  WARNING    Skipping example 36: Invalid cop=-1 in id=cb12fac8-5989-44bd-9ad9-03608df2f755
+05:59:22  [rank1]  WARNING    Skipping example 5: Invalid cop=-1 in id=ae87fc33-56eb-43b1-a558-e8e2bb918349
+05:59:22  [rank2]  WARNING    Skipping example 2: Invalid cop=-1 in id=f6ce5597-c646-4a2b-8767-764f185be603
+05:59:22  [rank0]  WARNING    Skipping example 40: Invalid cop=-1 in id=2b2d03e4-3717-4159-8478-c91da5bde875
+05:59:22  [rank1]  WARNING    Skipping example 9: Invalid cop=-1 in id=0a7cddf8-a8b8-4778-aa58-4b01c3da1c12
+05:59:22  [rank0]  WARNING    Skipping example 44: Invalid cop=-1 in id=02d6cf80-a129-4b05-9d27-30d285992456
+05:59:22  [rank2]  WARNING    Skipping example 6: Invalid cop=-1 in id=94492b8f-7c4d-4b43-ae93-90b0a49170b3
+05:59:22  [rank0]  WARNING    Skipping example 48: Invalid cop=-1 in id=6f5e5b14-6f8d-43bd-8919-2af994ef23e7
+05:59:22  [rank1]  WARNING    Skipping example 13: Invalid cop=-1 in id=84bdd06e-9593-4f59-bf53-0b68652bcb89
+  medmcqa (rank0 shard): 100%|██████████| 13/13 [00:00<00:00, 7917.23it/s]
+05:59:22  [rank1]  WARNING    Skipping example 17: Invalid cop=-1 in id=7c91c1d6-ab71-44cc-aa66-466ef050f9a4
+05:59:22  [rank2]  WARNING    Skipping example 10: Invalid cop=-1 in id=473071cf-e645-4318-bb6c-57b6115c2eb5
+05:59:22  [rank1]  WARNING    Skipping example 21: Invalid cop=-1 in id=7d49c267-f12c-4299-9047-e7a4dfe61f05
+05:59:22  [rank2]  WARNING    Skipping example 14: Invalid cop=-1 in id=ad2ff591-a32a-49ba-8bd8-83dbc3fd62e8
+05:59:22  [rank1]  WARNING    Skipping example 25: Invalid cop=-1 in id=d72e5fcf-5c80-46c0-a7ec-95362e337c7c
+05:59:22  [rank2]  WARNING    Skipping example 18: Invalid cop=-1 in id=08e5cca4-ae05-4e50-ab95-744415c79b86
+05:59:22  [rank1]  WARNING    Skipping example 29: Invalid cop=-1 in id=42098579-aab4-4f55-bbcc-c38812ecf574
+05:59:22  [rank2]  WARNING    Skipping example 22: Invalid cop=-1 in id=1f4060f6-9a8c-43c6-8922-99c59d1aa56a
+05:59:22  [rank1]  WARNING    Skipping example 33: Invalid cop=-1 in id=b8623af9-f5a2-42c2-be4f-904150ed0d88
+05:59:22  [rank2]  WARNING    Skipping example 26: Invalid cop=-1 in id=9ab78f29-7a0d-41d0-9d21-5186f9c1f1f8
+05:59:22  [rank1]  WARNING    Skipping example 37: Invalid cop=-1 in id=3d8a694a-25d0-4a30-aa28-bc4ab6bf094f
+05:59:22  [rank2]  WARNING    Skipping example 30: Invalid cop=-1 in id=0b6719c8-7692-4813-87ea-bf21fceab736
+05:59:22  [rank1]  WARNING    Skipping example 41: Invalid cop=-1 in id=b51d9728-6a66-4099-9c92-fc7fd9dbb7a4
+05:59:22  [rank2]  WARNING    Skipping example 34: Invalid cop=-1 in id=85a4856a-40bb-44a1-a025-3278b8faa922
+05:59:22  [rank1]  WARNING    Skipping example 45: Invalid cop=-1 in id=c2241db8-5415-431a-8f00-cd5ab67b238b
+05:59:22  [rank2]  WARNING    Skipping example 38: Invalid cop=-1 in id=64127662-a3f1-41fe-b553-09fc9ae89ada
+05:59:22  [rank1]  WARNING    Skipping example 49: Invalid cop=-1 in id=4f9d7580-fc1a-4f0b-a3cf-d67c414a31d6
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 999, in <module>
+[rank3]:     main()
+[rank3]:     ~~~~^^
+[rank3]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 862, in main
+[rank3]:     _save_shard_to_tmp(features, split_name, local_rank, features_dir)
+[rank3]:     ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 567, in _save_shard_to_tmp
+[rank3]:     hidden=np.stack(features["hidden"]).astype(np.float32),
+[rank3]:            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/numpy/_core/shape_base.py", line 454, in stack
+[rank3]:     raise ValueError('need at least one array to stack')
+[rank3]: ValueError: need at least one array to stack
+05:59:22  [rank2]  WARNING    Skipping example 42: Invalid cop=-1 in id=666159d8-4b0b-4db3-94e9-2271636086ca
+05:59:22  [rank2]  WARNING    Skipping example 46: Invalid cop=-1 in id=17f22534-113c-48b6-841a-a2ace81ee5dc
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 999, in <module>
+[rank0]:     main()
+[rank0]:     ~~~~^^
+[rank0]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 862, in main
+[rank0]:     _save_shard_to_tmp(features, split_name, local_rank, features_dir)
+[rank0]:     ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 567, in _save_shard_to_tmp
+[rank0]:     hidden=np.stack(features["hidden"]).astype(np.float32),
+[rank0]:            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/numpy/_core/shape_base.py", line 454, in stack
+[rank0]:     raise ValueError('need at least one array to stack')
+[rank0]: ValueError: need at least one array to stack
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 999, in <module>
+[rank1]:     main()
+[rank1]:     ~~~~^^
+[rank1]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 862, in main
+[rank1]:     _save_shard_to_tmp(features, split_name, local_rank, features_dir)
+[rank1]:     ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 567, in _save_shard_to_tmp
+[rank1]:     hidden=np.stack(features["hidden"]).astype(np.float32),
+[rank1]:            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/numpy/_core/shape_base.py", line 454, in stack
+[rank1]:     raise ValueError('need at least one array to stack')
+[rank1]: ValueError: need at least one array to stack
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 999, in <module>
+[rank2]:     main()
+[rank2]:     ~~~~^^
+[rank2]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 862, in main
+[rank2]:     _save_shard_to_tmp(features, split_name, local_rank, features_dir)
+[rank2]:     ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/03_extract.py", line 567, in _save_shard_to_tmp
+[rank2]:     hidden=np.stack(features["hidden"]).astype(np.float32),
+[rank2]:            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/numpy/_core/shape_base.py", line 454, in stack
+[rank2]:     raise ValueError('need at least one array to stack')
+[rank2]: ValueError: need at least one array to stack
+[rank0]:[W526 05:59:23.865056806 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W0526 05:59:23.923000 1430460 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 1430583 closing signal SIGTERM
+W0526 05:59:23.924000 1430460 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 1430584 closing signal SIGTERM
+W0526 05:59:23.924000 1430460 site-packages/torch/distributed/elastic/multiprocessing/api.py:897] Sending process 1430585 closing signal SIGTERM
+E0526 05:59:24.490000 1430460 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 3 (pid: 1430586) of binary: /home/lciechanowski/anaconda3/envs/ai/bin/python3.13
+Traceback (most recent call last):
+  File "/home/lciechanowski/anaconda3/envs/ai/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+    ~~~^^^^^^
+  File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+    ~~~~~~~~~~~~~~~
+        config=config,
+        ~~~~~~~~~~~~~~
+        entrypoint=cmd,
+        ~~~~~~~~~~~~~~~
+    )(*cmd_args)
+    ~^^^^^^^^^^^
+  File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+    ...<2 lines>...
+    )
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+scripts/03_extract.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-05-26_05:59:23
+  host      : calc02
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 1430586)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

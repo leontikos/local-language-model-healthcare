@@ -1,0 +1,42 @@
+07:49:36  INFO  Loading probe features + OOF probe scores …
+07:49:36  INFO    probe_set: 13307 examples
+07:49:36  INFO    routing_train: 8000  iso_cal: 2000  conformal_cal: 3307
+07:49:36  INFO    Saved 3 *_local_idx.json under /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/splits
+07:49:36  INFO  
+Pearson correlation matrix:
+            H    gap  probe  p_true
+H       1.000 -0.956 -0.918  -0.324
+gap    -0.956  1.000  0.872   0.293
+probe  -0.918  0.872  1.000   0.298
+p_true -0.324  0.293  0.298   1.000
+07:49:36  INFO    r(H, gap) = 0.956 > 0.85 → DROP gap
+07:49:36  INFO  Training routing LR on 8000 examples × 3 features …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:49:37  INFO    Best C = [0.1]
+07:49:37  INFO    Learned weights:
+07:49:37  INFO      H        : -2.7158
+07:49:37  INFO      probe    : +0.3783
+07:49:37  INFO      p_true   : -0.0886
+07:49:37  INFO      intercept : +2.8984
+07:49:37  INFO    Routing-LR train AUROC: 0.8147
+07:49:37  INFO    iso_cal: AUROC=0.8177  Brier(raw)=0.1496  Brier(isotonic)=0.1461
+07:49:37  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/routing_lr.pkl
+07:49:37  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/calibrator.pkl
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/05_routing.py:198: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+07:49:37  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/routing_metrics.json
+
+============================================================
+KROK 6 DONE
+  Routing features         : ['H', 'probe', 'p_true']
+  Routing-LR train AUROC   : 0.8147
+  iso_cal AUROC            : 0.8177
+  Brier raw → calibrated   : 0.1496 → 0.1461
+  conformal_cal reserved   : 3307 examples → next step
+  Next                     : python scripts/06_conformal.py
+============================================================

@@ -1,0 +1,95 @@
+# Fine-tuning config — Mistral-7B LoRA bf16 on MedMCQA
+# DDP variant for 4× NVIDIA L4 (23 GB each, no NVLink)
+#
+# Launch:
+#   bash scripts/launch_finetune_ddp.sh           # detached screen session
+#   torchrun --nproc_per_node=4 scripts/02_finetune.py --config finetune_config_ddp.yaml
+#
+# Differences vs. finetune_config.yaml (A100):
+#   - grad_accum 8 → 2     (4 GPUs already give the 4× factor; eff. batch stays 16)
+#   - gradient_checkpointing: false → true   (23 GB L4 needs the memory)
+#   - eval_steps/save_steps: 650 → 325       (steps/epoch halve under DDP)
+#   - report_to: wandb → tensorboard         (per user choice)
+#   - logging_steps: 50 → 25                 (more frequent progress)
+
+seed: 42
+
+model:
+  model_name_or_path: mistralai/Mistral-7B-Instruct-v0.3
+  torch_dtype: bfloat16
+  attn_implementation: sdpa                  # PyTorch built-in; flash-attn-2 needs compile (skipped)
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  bias: none
+  task_type: CAUSAL_LM
+
+data:
+  dataset_id: openlifescienceai/medmcqa
+  train_indices_json: data/splits/train_ft_idx.json
+  response_template: "Answer:"
+  max_seq_length: 512
+
+training:
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 8             # eval samples ~512 tokens, keep modest on L4
+  gradient_accumulation_steps: 2            # eff. batch = 2 (per-dev) × 2 (accum) × 4 (gpus) = 16
+  learning_rate: 5.0e-5                     # was 2e-4 → caused warmup-end instability (grad_norm ~50, clip ÷50)
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.06
+  weight_decay: 0.01
+  max_grad_norm: 1.0                        # kept — at LR 5e-5 grad_norm should drop to single digits naturally
+
+  eval_strategy: steps
+  eval_steps: 650                           # steps/epoch = 102765/16 ≈ 6423 → 10 evals/epoch (matches A100 config)
+  save_strategy: steps
+  save_steps: 650                           # MUST equal eval_steps for load_best_model_at_end
+  save_total_limit: 2                       # keep only best + latest
+  save_only_model: true                     # drop optimizer state from intermediates: 485 MB → 150 MB each
+
+  metric_for_best_model: eval_loss
+  greater_is_better: false
+  load_best_model_at_end: true
+  early_stopping_patience: 6                # 6 evals × 650 = 3900 steps ≈ 0.6 epoch window
+  min_train_epochs_for_early_stop: 1.0      # custom: don't even consider stopping until 1 full epoch has passed
+
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true              # L4 needs this — saves ~6 GB activation memory
+  optim: adamw_torch
+  dataloader_num_workers: 4                 # per rank; 4×4 = 16 workers total (104 cores available)
+  group_by_length: true
+
+  logging_steps: 25
+  report_to: tensorboard                    # logs into checkpoints/runs/
+
+  # DDP-specific
+  ddp_find_unused_parameters: false         # LoRA: all trainable params get grads, safe to disable
+  ddp_bucket_cap_mb: 25                     # gradient bucketing for PCIe (no NVLink)
+
+wandb:
+  project: medical-llm-thesis
+  run_name: finetune_medmcqa_mistral7b_ddp4xL4
+  entity: null
+
+paths:
+  checkpoint_dir: checkpoints
+  final_checkpoint_dir: checkpoints/final
+
+debug:
+  train_samples: 256
+  val_samples: 64
+  eval_steps: 8
+  save_steps: 8
+  num_train_epochs: 1

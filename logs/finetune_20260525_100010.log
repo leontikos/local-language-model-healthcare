@@ -1,0 +1,2 @@
+10:00:10  [rank0]  INFO  Log file: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/finetune_20260525_100010.log
+10:00:10  [rank0]  INFO  DDP world_size=4  local_rank=0

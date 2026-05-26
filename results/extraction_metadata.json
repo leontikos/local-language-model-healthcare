@@ -1,0 +1,65 @@
+{
+  "extraction_timestamp": "2026-05-26T06:17:15.234502Z",
+  "model_checkpoint": "/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final",
+  "model_base": "mistralai/Mistral-7B-Instruct-v0.3",
+  "best_layer": 24,
+  "sweep_layers": [
+    8,
+    16,
+    24,
+    30,
+    31
+  ],
+  "ids_abcd": [
+    1098,
+    1133,
+    1102,
+    1152
+  ],
+  "yes_id": 6360,
+  "no_id": 2538,
+  "skip_ptrue": false,
+  "debug_mode": false,
+  "splits": {
+    "probe": {
+      "n": 13307,
+      "accuracy": 0.7286,
+      "H_mean": 0.6436,
+      "H_std": 0.4433,
+      "gap_mean": 0.6071,
+      "gap_std": 0.3396,
+      "p_true_mean": 0.9557,
+      "p_true_coverage": 1.0
+    },
+    "val": {
+      "n": 4183,
+      "accuracy": 0.5687,
+      "H_mean": 0.8604,
+      "H_std": 0.4182,
+      "gap_mean": 0.4498,
+      "gap_std": 0.334,
+      "p_true_mean": 0.9512,
+      "p_true_coverage": 1.0
+    },
+    "test_medqa": {
+      "n": 1273,
+      "accuracy": 0.5664,
+      "H_mean": 0.7946,
+      "H_std": 0.3781,
+      "gap_mean": 0.4972,
+      "gap_std": 0.3163,
+      "p_true_mean": 0.9231,
+      "p_true_coverage": 1.0
+    },
+    "test_mmlu": {
+      "n": 945,
+      "accuracy": 0.6857,
+      "H_mean": 0.6807,
+      "H_std": 0.4318,
+      "gap_mean": 0.5758,
+      "gap_std": 0.3374,
+      "p_true_mean": 0.9528,
+      "p_true_coverage": 1.0
+    }
+  }
+}

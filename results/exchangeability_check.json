@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-05-26T08:19:27.302944Z",
+  "alpha": 0.1,
+  "cp_target": 0.9,
+  "n_val": 4183,
+  "setup_A_probe_based": {
+    "q_hat": 0.5814,
+    "local_rate": 0.79273,
+    "local_rate_95ci": [
+      0.78053,
+      0.80516
+    ],
+    "local_acc": 0.6339,
+    "meets_cp_target": false,
+    "miss_amount": -0.10727
+  },
+  "setup_B_val_kfold": {
+    "n_folds": 5,
+    "mean_q_hat": 0.67442,
+    "per_fold_q_hats": [
+      0.67442,
+      0.67442,
+      0.67442,
+      0.67442,
+      0.67442
+    ],
+    "per_fold_local_rate": [
+      0.91398,
+      0.90203,
+      0.9307,
+      0.90909,
+      0.91627
+    ],
+    "per_fold_local_acc": [
+      0.60261,
+      0.60265,
+      0.59435,
+      0.59211,
+      0.59922
+    ],
+    "local_rate": 0.91442,
+    "local_rate_95ci": [
+      0.90509,
+      0.92303
+    ],
+    "local_acc": 0.59817,
+    "meets_cp_target": true,
+    "miss_amount": 0.01442
+  },
+  "interpretation": "If Setup B restores the CP target while Setup A misses it, the in-dist undercoverage is caused by exchangeability violation between probe_set (from MedMCQA train) and val, not the CP method."
+}

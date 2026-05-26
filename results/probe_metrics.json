@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-05-26T07:43:07.754475Z",
+  "n_probe": 13307,
+  "hidden_dim": 4096,
+  "Cs": [
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "n_folds": 5,
+  "fold_aurocs": [
+    0.80998,
+    0.78084,
+    0.7857,
+    0.80155,
+    0.7824
+  ],
+  "mean_oof_auroc": 0.79209,
+  "pooled_oof_auroc": 0.792,
+  "oof_brier": 0.1578,
+  "best_C_final_probe": 0.01
+}

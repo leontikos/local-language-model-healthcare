@@ -1,0 +1,8 @@
+Caching openlifescienceai/medmcqa (train+validation+test) ...
+Generating train split:   0%|          | 0/182822 [00:00<?, ? examples/s]Generating train split:   7%|▋         | 13000/182822 [00:00<00:01, 118311.17 examples/s]Generating train split:  19%|█▊        | 34000/182822 [00:00<00:00, 163963.99 examples/s]Generating train split:  31%|███       | 56000/182822 [00:00<00:00, 183651.35 examples/s]Generating train split:  46%|████▌     | 84000/182822 [00:00<00:00, 182254.88 examples/s]Generating train split:  59%|█████▊    | 107000/182822 [00:00<00:00, 193808.15 examples/s]Generating train split:  72%|███████▏  | 131000/182822 [00:00<00:00, 202820.15 examples/s]Generating train split:  89%|████████▊ | 162000/182822 [00:00<00:00, 199889.68 examples/s]Generating train split: 100%|██████████| 182822/182822 [00:00<00:00, 196659.29 examples/s]Generating train split: 100%|██████████| 182822/182822 [00:00<00:00, 190335.72 examples/s]
+Generating test split:   0%|          | 0/6150 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 6150/6150 [00:00<00:00, 409158.20 examples/s]
+Generating validation split:   0%|          | 0/4183 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 4183/4183 [00:00<00:00, 212409.03 examples/s]
+  train: 182,822 examples, columns=['id', 'question', 'opa', 'opb', 'opc', 'opd']
+  test: 6,150 examples, columns=['id', 'question', 'opa', 'opb', 'opc', 'opd']
+  validation: 4,183 examples, columns=['id', 'question', 'opa', 'opb', 'opc', 'opd']
+OK

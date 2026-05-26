@@ -1,0 +1,51 @@
+08:14:09  INFO  Loading routing artifacts …
+08:14:09  INFO    Routing features: ['H', 'probe', 'p_true']
+08:14:09  INFO    Using α=0.10  q_hat=0.5814  decision_threshold=0.4186
+08:14:09  INFO  
+=== in-dist (val) ===
+08:14:09  INFO    n=4183  standalone_acc=0.5687
+08:14:11  INFO    AUROC=0.7429 [95% CI 0.7285, 0.7570]
+08:14:11  INFO    AUGRC=0.15619 [95% CI 0.14795, 0.16405]
+08:14:11  INFO    Brier=0.2041 [95% CI 0.1985, 0.2099]   ECE=0.0548
+08:14:11  INFO    local_rate=0.793 (CP target ≥ 0.90, guarantee_valid=True)  local_acc=0.634  escalation=0.207
+08:14:11  INFO    system_acc_oracle=0.7098
+08:14:11  INFO  
+=== near-OOD (test_medqa) ===
+08:14:11  INFO    n=1273  standalone_acc=0.5664
+08:14:13  INFO    AUROC=0.6949 [95% CI 0.6665, 0.7214]
+08:14:13  INFO    AUGRC=0.16899 [95% CI 0.15397, 0.18245]
+08:14:13  INFO    Brier=0.2301 [95% CI 0.2181, 0.2411]   ECE=0.1032
+08:14:13  INFO    local_rate=0.907 (CP target ≥ 0.90, guarantee_valid=False)  local_acc=0.583  escalation=0.093
+08:14:13  INFO    system_acc_oracle=0.6222
+08:14:13  INFO  
+=== far-OOD (test_mmlu) ===
+08:14:13  INFO    n=945  standalone_acc=0.6857
+08:14:14  INFO    AUROC=0.7823 [95% CI 0.7527, 0.8107]
+08:14:14  INFO    AUGRC=0.09549 [95% CI 0.08400, 0.11056]
+08:14:14  INFO    Brier=0.1705 [95% CI 0.1586, 0.1835]   ECE=0.0425
+08:14:14  INFO    local_rate=0.921 (CP target ≥ 0.90, guarantee_valid=False)  local_acc=0.717  escalation=0.079
+08:14:14  INFO    system_acc_oracle=0.7397
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/07_evaluate.py:215: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+08:14:14  INFO  Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/evaluation.json
+
+========================================================================
+KROK 8 — 3-tier evaluation results
+========================================================================
+Metric                         in-dist      near-OOD       far-OOD
+------------------------------------------------------------------
+n                                 4183          1273           945
+standalone_acc                  0.5687        0.5664        0.6857
+auroc                           0.7429        0.6949        0.7823
+augrc                           0.1562        0.1690        0.0955
+aurc                            0.2384        0.2730        0.1423
+brier                           0.2041        0.2301        0.1705
+ece                             0.0548        0.1032        0.0425
+local_rate                      0.7927        0.9065        0.9206
+local_acc                       0.6339        0.5832        0.7172
+escalation_rate                 0.2073        0.0935        0.0794
+system_acc_oracle               0.7098        0.6222        0.7397
+========================================================================
+  CP guarantee valid only for in-dist (cp_guarantee_valid). OOD splits exhibit coverage degradation — the main thesis result.
+
+Full metrics → results/evaluation.json

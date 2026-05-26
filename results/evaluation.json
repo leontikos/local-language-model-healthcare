@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-05-26T08:14:14.962779Z",
+  "alpha_primary": 0.1,
+  "q_hat": 0.5814,
+  "decision_threshold": 0.4186,
+  "routing_feature_names": [
+    "H",
+    "probe",
+    "p_true"
+  ],
+  "splits": {
+    "in-dist": {
+      "n": 4183,
+      "standalone_acc": 0.5687,
+      "auroc": 0.7429,
+      "auroc_ci": [
+        0.7285,
+        0.757
+      ],
+      "augrc": 0.15619,
+      "augrc_ci": [
+        0.14795,
+        0.16405
+      ],
+      "aurc": 0.23835,
+      "brier": 0.2041,
+      "brier_ci": [
+        0.1985,
+        0.2099
+      ],
+      "ece": 0.0548,
+      "alpha": 0.1,
+      "q_hat": 0.5814,
+      "decision_threshold": 0.4186,
+      "n_local": 3316,
+      "local_rate": 0.7927,
+      "local_acc": 0.6339,
+      "escalation_rate": 0.2073,
+      "system_acc_oracle": 0.7098,
+      "cp_guarantee_valid": true
+    },
+    "near-OOD": {
+      "n": 1273,
+      "standalone_acc": 0.5664,
+      "auroc": 0.6949,
+      "auroc_ci": [
+        0.6665,
+        0.7214
+      ],
+      "augrc": 0.16899,
+      "augrc_ci": [
+        0.15397,
+        0.18245
+      ],
+      "aurc": 0.27303,
+      "brier": 0.2301,
+      "brier_ci": [
+        0.2181,
+        0.2411
+      ],
+      "ece": 0.1032,
+      "alpha": 0.1,
+      "q_hat": 0.5814,
+      "decision_threshold": 0.4186,
+      "n_local": 1154,
+      "local_rate": 0.9065,
+      "local_acc": 0.5832,
+      "escalation_rate": 0.0935,
+      "system_acc_oracle": 0.6222,
+      "cp_guarantee_valid": false
+    },
+    "far-OOD": {
+      "n": 945,
+      "standalone_acc": 0.6857,
+      "auroc": 0.7823,
+      "auroc_ci": [
+        0.7527,
+        0.8107
+      ],
+      "augrc": 0.09549,
+      "augrc_ci": [
+        0.084,
+        0.11056
+      ],
+      "aurc": 0.14227,
+      "brier": 0.1705,
+      "brier_ci": [
+        0.1586,
+        0.1835
+      ],
+      "ece": 0.0425,
+      "alpha": 0.1,
+      "q_hat": 0.5814,
+      "decision_threshold": 0.4186,
+      "n_local": 870,
+      "local_rate": 0.9206,
+      "local_acc": 0.7172,
+      "escalation_rate": 0.0794,
+      "system_acc_oracle": 0.7397,
+      "cp_guarantee_valid": false
+    }
+  }
+}

@@ -1,0 +1,237 @@
+W0525 10:02:12.922000 3220604 site-packages/torch/distributed/run.py:792] 
+W0525 10:02:12.922000 3220604 site-packages/torch/distributed/run.py:792] *****************************************
+W0525 10:02:12.922000 3220604 site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0525 10:02:12.922000 3220604 site-packages/torch/distributed/run.py:792] *****************************************
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/02_finetune.py:125: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  log_file = log_dir / f"finetune_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.log"
+10:02:13  [rank0]  INFO  Log file: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/finetune_20260525_100213.log
+10:02:13  [rank0]  INFO  DDP world_size=4  local_rank=0
+10:02:13  [rank0]  INFO  Loaded config: configs/finetune_config_ddp.yaml
+10:02:13  [rank0]  INFO  DEBUG MODE — small dataset, fast eval, no GPU required
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+10:02:16  [rank0]  INFO  Logging to TensorBoard (WANDB_API_KEY not set)
+10:02:16  [rank0]  INFO  Loading tokenizer: mistralai/Mistral-7B-Instruct-v0.3
+10:02:17  [rank0]  INFO  Response template 'Answer:' → token IDs: [27075, 29515]
+10:02:17  [rank0]  INFO  Response template ' Answer:' → token IDs: [27075, 29515]
+10:02:18  [rank3]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:02:18  [rank1]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:02:18  [rank2]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:02:18  [rank0]  INFO  GPU: NVIDIA L4  (23.7 GB VRAM)
+10:02:18  [rank0]  WARNING  < 24 GB VRAM detected (23.7 GB). Consider reducing per_device_eval_batch_size or enabling gradient_checkpointing.
+10:02:18  [rank0]  INFO  Loading model: mistralai/Mistral-7B-Instruct-v0.3  dtype=bfloat16
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:02,  1.19s/it]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:02,  1.37s/it]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:03,  1.62s/it]Loading checkpoint shards:  33%|███▎      | 1/3 [00:01<00:03,  1.60s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.08s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.28s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.48s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:02<00:01,  1.47s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.02it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.02s/it]
+Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.15s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:03<00:00,  1.19s/it]
+Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.36s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.40s/it]
+Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.36s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:04<00:00,  1.41s/it]
+10:02:22  [rank0]  INFO  Attention implementation: sdpa  device_map={'': 0}
+trainable params: 41,943,040 || all params: 7,289,966,592 || trainable%: 0.5754
+trainable params: 41,943,040 || all params: 7,289,966,592 || trainable%: 0.5754
+trainable params: 41,943,040 || all params: 7,289,966,592 || trainable%: 0.5754
+trainable params: 41,943,040 || all params: 7,289,966,592 || trainable%: 0.5754
+10:02:24  [rank0]  INFO  Loading MedMCQA …
+Filter:   0%|          | 0/182822 [00:00<?, ? examples/s]Filter:   0%|          | 0/182822 [00:00<?, ? examples/s]Filter:   5%|▍         | 9000/182822 [00:00<00:02, 84855.13 examples/s]Filter:   5%|▍         | 9000/182822 [00:00<00:02, 78026.95 examples/s]Filter:  12%|█▏        | 22000/182822 [00:00<00:01, 103653.14 examples/s]Filter:  11%|█▏        | 21000/182822 [00:00<00:01, 98362.62 examples/s]Filter:  18%|█▊        | 33000/182822 [00:00<00:01, 107066.43 examples/s]Filter:  20%|█▉        | 36000/182822 [00:00<00:01, 113169.06 examples/s]Filter:  25%|██▍       | 45000/182822 [00:00<00:01, 111314.22 examples/s]Filter:  27%|██▋       | 50000/182822 [00:00<00:01, 117264.53 examples/s]Filter:   0%|          | 0/182822 [00:00<?, ? examples/s]Filter:   0%|          | 0/182822 [00:00<?, ? examples/s]Filter:  31%|███       | 57000/182822 [00:00<00:01, 113146.09 examples/s]Filter:  35%|███▌      | 64000/182822 [00:00<00:00, 119160.97 examples/s]Filter:   5%|▍         | 9000/182822 [00:00<00:02, 79589.32 examples/s]Filter:   5%|▍         | 9000/182822 [00:00<00:02, 79658.18 examples/s]Filter:  38%|███▊      | 69000/182822 [00:00<00:00, 114809.02 examples/s]Filter:  42%|████▏     | 77000/182822 [00:00<00:00, 119851.65 examples/s]Filter:  11%|█▏        | 21000/182822 [00:00<00:01, 100533.58 examples/s]Filter:  12%|█▏        | 22000/182822 [00:00<00:01, 102947.50 examples/s]Filter:  44%|████▍     | 81000/182822 [00:00<00:00, 115169.91 examples/s]Filter:  18%|█▊        | 33000/182822 [00:00<00:01, 107995.09 examples/s]Filter:  50%|████▉     | 91000/182822 [00:00<00:00, 121066.95 examples/s]Filter:  20%|█▉        | 36000/182822 [00:00<00:01, 111642.31 examples/s]Filter:  51%|█████     | 93000/182822 [00:00<00:00, 116164.70 examples/s]Filter:  25%|██▍       | 45000/182822 [00:00<00:01, 112110.49 examples/s]Filter:  57%|█████▋    | 104000/182822 [00:00<00:00, 121082.16 examples/s]Filter:  27%|██▋       | 49000/182822 [00:00<00:01, 114623.18 examples/s]Filter:  57%|█████▋    | 105000/182822 [00:00<00:00, 116071.27 examples/s]Filter:  31%|███       | 57000/182822 [00:00<00:01, 112340.22 examples/s]Filter:  64%|██████▍   | 117000/182822 [00:00<00:00, 119657.79 examples/s]Filter:  34%|███▍      | 63000/182822 [00:00<00:01, 117156.49 examples/s]Filter:  64%|██████▍   | 117000/182822 [00:01<00:00, 116668.69 examples/s]Filter:  38%|███▊      | 69000/182822 [00:00<00:00, 114217.32 examples/s]Filter:  72%|███████▏  | 131000/182822 [00:01<00:00, 120975.87 examples/s]Filter:  71%|███████   | 129000/182822 [00:01<00:00, 116900.21 examples/s]Filter:  42%|████▏     | 77000/182822 [00:00<00:00, 118288.98 examples/s]Filter:  44%|████▍     | 81000/182822 [00:00<00:00, 114973.30 examples/s]Filter:  79%|███████▉  | 145000/182822 [00:01<00:00, 121791.63 examples/s]Filter:  77%|███████▋  | 141000/182822 [00:01<00:00, 117282.99 examples/s]Filter:  50%|████▉     | 91000/182822 [00:00<00:00, 119219.60 examples/s]Filter:  51%|█████     | 93000/182822 [00:00<00:00, 115959.49 examples/s]Filter:  86%|████████▋ | 158000/182822 [00:01<00:00, 121775.84 examples/s]Filter:  84%|████████▎ | 153000/182822 [00:01<00:00, 117675.73 examples/s]Filter:  57%|█████▋    | 104000/182822 [00:00<00:00, 119638.11 examples/s]Filter:  57%|█████▋    | 105000/182822 [00:00<00:00, 116578.25 examples/s]Filter:  94%|█████████▍| 172000/182822 [00:01<00:00, 122255.45 examples/s]Filter:  90%|█████████ | 165000/182822 [00:01<00:00, 117844.28 examples/s]Filter:  64%|██████▍   | 117000/182822 [00:01<00:00, 119771.28 examples/s]Filter:  64%|██████▍   | 117000/182822 [00:01<00:00, 117007.82 examples/s]Filter: 100%|██████████| 182822/182822 [00:01<00:00, 119137.10 examples/s]
+Filter:  97%|█████████▋| 177000/182822 [00:01<00:00, 117650.46 examples/s]Filter:  71%|███████   | 130000/182822 [00:01<00:00, 119906.19 examples/s]Filter:  71%|███████   | 129000/182822 [00:01<00:00, 116582.07 examples/s]Filter: 100%|██████████| 182822/182822 [00:01<00:00, 114340.84 examples/s]
+Map:   0%|          | 0/256 [00:00<?, ? examples/s]Map: 100%|██████████| 256/256 [00:00<00:00, 9936.63 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Filter:  77%|███████▋  | 141000/182822 [00:01<00:00, 117026.64 examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 7946.34 examples/s]
+Filter:  78%|███████▊  | 143000/182822 [00:01<00:00, 119975.78 examples/s]/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py:100: FutureWarning: Deprecated argument(s) used in '__init__': dataset_text_field, max_seq_length. Will not be supported from version '0.13.0'.
+
+Deprecated positional argument(s) used in SFTTrainer, please use the SFTConfig to set these arguments instead.
+  warnings.warn(message, FutureWarning)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py:100: FutureWarning: Deprecated argument(s) used in '__init__': dataset_text_field, max_seq_length. Will not be supported from version '0.13.0'.
+
+Deprecated positional argument(s) used in SFTTrainer, please use the SFTConfig to set these arguments instead.
+  warnings.warn(message, FutureWarning)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:300: UserWarning: You passed a `max_seq_length` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:328: UserWarning: You passed a `dataset_text_field` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+Filter:  84%|████████▎ | 153000/182822 [00:01<00:00, 117313.02 examples/s]Filter:  85%|████████▌ | 156000/182822 [00:01<00:00, 120039.46 examples/s]/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:300: UserWarning: You passed a `max_seq_length` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:328: UserWarning: You passed a `dataset_text_field` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+Filter:  90%|█████████ | 165000/182822 [00:01<00:00, 117532.72 examples/s]Filter:  92%|█████████▏| 169000/182822 [00:01<00:00, 120073.44 examples/s]Filter:  97%|█████████▋| 177000/182822 [00:01<00:00, 117641.02 examples/s]Filter: 100%|██████████| 182822/182822 [00:01<00:00, 120090.26 examples/s]Filter: 100%|██████████| 182822/182822 [00:01<00:00, 117284.89 examples/s]
+Filter: 100%|██████████| 182822/182822 [00:01<00:00, 114434.12 examples/s]
+10:02:28  [rank0]  INFO  train_ft: 102765 examples  ft_val: 2000 examples (carved from train_ft, seed=42)
+10:02:28  [rank0]  INFO  MedMCQA val (4183) → reserved ONLY for conformal calibration, not used here.
+10:02:28  [rank0]  INFO  DEBUG: train=256  val=64
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py:100: FutureWarning: Deprecated argument(s) used in '__init__': dataset_text_field, max_seq_length. Will not be supported from version '0.13.0'.
+
+Deprecated positional argument(s) used in SFTTrainer, please use the SFTConfig to set these arguments instead.
+  warnings.warn(message, FutureWarning)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/huggingface_hub/utils/_deprecation.py:100: FutureWarning: Deprecated argument(s) used in '__init__': dataset_text_field, max_seq_length. Will not be supported from version '0.13.0'.
+
+Deprecated positional argument(s) used in SFTTrainer, please use the SFTConfig to set these arguments instead.
+  warnings.warn(message, FutureWarning)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:300: UserWarning: You passed a `max_seq_length` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:328: UserWarning: You passed a `dataset_text_field` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:300: UserWarning: You passed a `max_seq_length` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/trl/trainer/sft_trainer.py:328: UserWarning: You passed a `dataset_text_field` argument to the SFTTrainer, the value you passed will override the one in the `SFTConfig`.
+  warnings.warn(
+Map:   0%|          | 0/256 [00:00<?, ? examples/s]Map: 100%|██████████| 256/256 [00:00<00:00, 6087.66 examples/s]
+Map:   0%|          | 0/64 [00:00<?, ? examples/s]Map: 100%|██████████| 64/64 [00:00<00:00, 6154.66 examples/s]
+NCCL version 2.21.5+cuda12.4
+10:02:28  [rank0]  INFO  Starting training …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:54: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  ALLREDUCE = partial(_ddp_comm_hook_wrapper, comm_hook=default.allreduce_hook)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:55: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  FP16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:58: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BF16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:61: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_TENSOR = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:64: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_CHANNEL = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:67: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:74: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:80: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:85: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:90: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  NOOP = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:54: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  ALLREDUCE = partial(_ddp_comm_hook_wrapper, comm_hook=default.allreduce_hook)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:55: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  FP16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:58: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BF16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:61: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_TENSOR = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:64: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_CHANNEL = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:67: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:74: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:80: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:85: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:90: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  NOOP = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:54: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  ALLREDUCE = partial(_ddp_comm_hook_wrapper, comm_hook=default.allreduce_hook)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:55: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  FP16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:58: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BF16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:61: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_TENSOR = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:64: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_CHANNEL = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:67: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:74: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:80: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:85: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:90: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  NOOP = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:54: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  ALLREDUCE = partial(_ddp_comm_hook_wrapper, comm_hook=default.allreduce_hook)
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:55: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  FP16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:58: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BF16_COMPRESS = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:61: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_TENSOR = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:64: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  QUANTIZE_PER_CHANNEL = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:67: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:74: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:80: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:85: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  BATCHED_POWER_SGD_RANK2 = partial(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/torch/distributed/algorithms/ddp_comm_hooks/__init__.py:90: FutureWarning: functools.partial will be a method descriptor in future Python versions; wrap it in enum.member() if you want to preserve the old behavior
+  NOOP = partial(
+  0%|          | 0/32 [00:00<?, ?it/s]  3%|▎         | 1/32 [00:01<00:38,  1.23s/it]  6%|▋         | 2/32 [00:01<00:24,  1.25it/s]  9%|▉         | 3/32 [00:02<00:18,  1.57it/s] 12%|█▎        | 4/32 [00:02<00:15,  1.83it/s] 16%|█▌        | 5/32 [00:02<00:13,  2.01it/s]                                              {'loss': 3.4068, 'grad_norm': 45.03911590576172, 'learning_rate': 0.00019510565162951537, 'epoch': 0.16}
+ 16%|█▌        | 5/32 [00:03<00:13,  2.01it/s] 19%|█▉        | 6/32 [00:03<00:12,  2.15it/s] 22%|██▏       | 7/32 [00:03<00:10,  2.28it/s] 25%|██▌       | 8/32 [00:04<00:09,  2.44it/s]Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                              
+                                     [A{'eval_loss': 1.8245811462402344, 'eval_runtime': 1.0902, 'eval_samples_per_second': 58.703, 'eval_steps_per_second': 0.917, 'epoch': 0.25}
+ 25%|██▌       | 8/32 [00:05<00:09,  2.44it/s]
+100%|██████████| 1/1 [00:00<00:00,  3.52it/s][A
+                                             [A 28%|██▊       | 9/32 [00:06<00:24,  1.08s/it] 31%|███▏      | 10/32 [00:07<00:19,  1.16it/s]                                               {'loss': 1.6833, 'grad_norm': 8.342182159423828, 'learning_rate': 0.00016691306063588583, 'epoch': 0.31}
+ 31%|███▏      | 10/32 [00:07<00:19,  1.16it/s] 34%|███▍      | 11/32 [00:07<00:14,  1.40it/s] 38%|███▊      | 12/32 [00:07<00:12,  1.64it/s] 41%|████      | 13/32 [00:08<00:10,  1.87it/s] 44%|████▍     | 14/32 [00:08<00:08,  2.08it/s] 47%|████▋     | 15/32 [00:08<00:07,  2.26it/s]                                               {'loss': 1.502, 'grad_norm': 9.111945152282715, 'learning_rate': 0.00012079116908177593, 'epoch': 0.47}
+ 47%|████▋     | 15/32 [00:08<00:07,  2.26it/s] 50%|█████     | 16/32 [00:09<00:06,  2.41it/s]Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                               
+                                     [A{'eval_loss': 1.3369828462600708, 'eval_runtime': 1.0668, 'eval_samples_per_second': 59.993, 'eval_steps_per_second': 0.937, 'epoch': 0.5}
+ 50%|█████     | 16/32 [00:10<00:06,  2.41it/s]
+100%|██████████| 1/1 [00:00<00:00,  3.53it/s][A
+                                             [A 53%|█████▎    | 17/32 [00:11<00:15,  1.03s/it] 56%|█████▋    | 18/32 [00:12<00:11,  1.19it/s] 59%|█████▉    | 19/32 [00:12<00:09,  1.43it/s] 62%|██████▎   | 20/32 [00:12<00:07,  1.66it/s]                                               {'loss': 1.3093, 'grad_norm': 12.328216552734375, 'learning_rate': 6.909830056250527e-05, 'epoch': 0.62}
+ 62%|██████▎   | 20/32 [00:12<00:07,  1.66it/s] 66%|██████▌   | 21/32 [00:13<00:05,  1.89it/s] 69%|██████▉   | 22/32 [00:13<00:04,  2.10it/s] 72%|███████▏  | 23/32 [00:13<00:03,  2.28it/s] 75%|███████▌  | 24/32 [00:14<00:03,  2.43it/s]Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                               
+                                     [A{'eval_loss': 1.1948633193969727, 'eval_runtime': 1.0771, 'eval_samples_per_second': 59.419, 'eval_steps_per_second': 0.928, 'epoch': 0.75}
+ 75%|███████▌  | 24/32 [00:15<00:03,  2.43it/s]
+100%|██████████| 1/1 [00:00<00:00,  3.50it/s][A
+                                             [A 78%|███████▊  | 25/32 [00:16<00:07,  1.09s/it]                                               {'loss': 1.4408, 'grad_norm': 53.39069747924805, 'learning_rate': 2.5685517452260567e-05, 'epoch': 0.78}
+ 78%|███████▊  | 25/32 [00:16<00:07,  1.09s/it] 81%|████████▏ | 26/32 [00:17<00:05,  1.14it/s] 84%|████████▍ | 27/32 [00:17<00:03,  1.37it/s] 88%|████████▊ | 28/32 [00:18<00:02,  1.61it/s] 91%|█████████ | 29/32 [00:18<00:01,  1.83it/s] 94%|█████████▍| 30/32 [00:18<00:00,  2.05it/s]                                               {'loss': 1.3443, 'grad_norm': 31.71630096435547, 'learning_rate': 2.1852399266194314e-06, 'epoch': 0.94}
+ 94%|█████████▍| 30/32 [00:18<00:00,  2.05it/s] 97%|█████████▋| 31/32 [00:19<00:00,  2.14it/s]100%|██████████| 32/32 [00:19<00:00,  2.11it/s]Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+Trainer.tokenizer is now deprecated. You should use Trainer.processing_class instead.
+
+  0%|          | 0/1 [00:00<?, ?it/s][A                                               
+                                     [A{'eval_loss': 1.1432517766952515, 'eval_runtime': 1.0745, 'eval_samples_per_second': 59.564, 'eval_steps_per_second': 0.931, 'epoch': 1.0}
+100%|██████████| 32/32 [00:20<00:00,  2.11it/s]
+100%|██████████| 1/1 [00:00<00:00,  3.50it/s][A
+                                             [A                                               {'train_runtime': 22.1617, 'train_samples_per_second': 11.551, 'train_steps_per_second': 1.444, 'train_loss': 1.7485527694225311, 'epoch': 1.0}
+100%|██████████| 32/32 [00:22<00:00,  2.11it/s]100%|██████████| 32/32 [00:22<00:00,  1.44it/s]
+10:02:52  [rank0]  INFO  Saving best model to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final …
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/02_finetune.py:508: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/02_finetune.py:508: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/02_finetune.py:508: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/02_finetune.py:508: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+10:02:53  [rank0]  INFO  Metadata saved to /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final/finetune_metadata.json
+10:02:53  [rank0]  INFO  ============================================================
+10:02:53  [rank0]  INFO  KROK 3 DONE
+10:02:53  [rank0]  INFO    Best eval_loss:  1.1433
+10:02:53  [rank0]  INFO    Steps trained:   32
+10:02:53  [rank0]  INFO    Early stopped:   True
+10:02:53  [rank0]  INFO    Checkpoint:      /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+10:02:53  [rank0]  INFO  ============================================================
+10:02:53  [rank0]  INFO  Next: python scripts/00_verify.py --blocker 3
+10:02:53  [rank0]  INFO  Then: python scripts/03_extract.py
+[rank0]:[W525 10:02:53.509295024 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())

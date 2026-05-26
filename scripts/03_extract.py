@@ -86,9 +86,9 @@ ALL_SPLITS = ["probe", "val", "test_medmcqa", "test_medqa", "test_mmlu"]
 # Config
 # ---------------------------------------------------------------------------
 
-def _load_config() -> dict:
+def _load_config(config_name: str = "finetune_config.yaml") -> dict:
     from omegaconf import OmegaConf
-    cfg_path = ROOT / "configs" / "finetune_config.yaml"
+    cfg_path = ROOT / "configs" / config_name
     return OmegaConf.to_container(OmegaConf.load(cfg_path), resolve=True)
 
 
@@ -147,8 +147,13 @@ def _normalize(example: dict, source: str) -> tuple[str, dict[str, str], str, st
 # Model loading
 # ---------------------------------------------------------------------------
 
-def _load_model(cfg: dict, debug: bool):
-    """Load fine-tuned LoRA adapter, merge weights, return (model, tokenizer)."""
+def _load_model(cfg: dict, debug: bool, local_rank: int = 0, world_size: int = 1):
+    """Load fine-tuned LoRA adapter, merge weights, return (model, tokenizer).
+
+    Under DDP-style parallel inference (world_size > 1), each rank loads a full copy
+    of the model onto its own GPU (device_map={'': local_rank}). With world_size=1
+    we use device_map='auto' for the original single-GPU behaviour.
+    """
     import torch
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -171,9 +176,9 @@ def _load_model(cfg: dict, debug: bool):
     torch_dtype = dtype_map[cfg["model"]["torch_dtype"]]
 
     if torch.cuda.is_available():
-        gpu_name = torch.cuda.get_device_name(0)
-        total_gb = torch.cuda.get_device_properties(0).total_memory / 1e9
-        log.info("GPU: %s  (%.1f GB VRAM)", gpu_name, total_gb)
+        gpu_name = torch.cuda.get_device_name(local_rank)
+        total_gb = torch.cuda.get_device_properties(local_rank).total_memory / 1e9
+        log.info("GPU[%d]: %s  (%.1f GB VRAM)", local_rank, gpu_name, total_gb)
         if total_gb < 8:
             log.warning("< 8 GB VRAM — extraction may OOM; consider --debug first")
     else:
@@ -204,13 +209,35 @@ def _load_model(cfg: dict, debug: bool):
             sys.exit(1)
     log.info("  ✓ Token IDs verified: A=%d  B=%d  C=%d  D=%d", *IDS_ABCD)
 
-    log.info("Loading base model: %s  dtype=%s", model_name, cfg["model"]["torch_dtype"])
-    base_model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        torch_dtype=torch_dtype,
-        device_map="auto",
-        attn_implementation=cfg["model"]["attn_implementation"],
+    # device_map: full model per rank under DDP-style parallel inference,
+    # "auto" (transformers picks) for single-GPU.
+    device_map = {"": local_rank} if world_size > 1 else "auto"
+
+    _attn_impl = cfg["model"]["attn_implementation"]
+    log.info(
+        "Loading base model: %s  dtype=%s  device_map=%s  attn=%s",
+        model_name, cfg["model"]["torch_dtype"], device_map, _attn_impl,
     )
+    try:
+        base_model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch_dtype,
+            device_map=device_map,
+            attn_implementation=_attn_impl,
+        )
+    except (ImportError, ValueError) as e:
+        if "flash" in str(e).lower():
+            log.warning(
+                "flash_attention_2 unavailable (%s) — falling back to sdpa", e,
+            )
+            base_model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype=torch_dtype,
+                device_map=device_map,
+                attn_implementation="sdpa",
+            )
+        else:
+            raise
 
     log.info("Loading LoRA adapter from %s", final_dir)
     model = PeftModel.from_pretrained(base_model, str(final_dir))
@@ -234,11 +261,19 @@ def _run_layer_sweep(
     n_samples: int = 2000,
     n_folds: int = 5,
     seed: int = 42,
+    local_rank: int = 0,
+    world_size: int = 1,
+    barrier=lambda: None,
 ) -> int:
     """
-    Extract hidden states at SWEEP_LAYERS for n_samples probe examples.
-    Run n_folds-fold cross-validated LogisticRegression per layer.
+    Extract hidden states at SWEEP_LAYERS for n_samples probe examples,
+    then run n_folds-fold cross-validated LogisticRegression per layer.
     Returns the layer index with the highest mean AUROC.
+
+    Under world_size>1, each rank processes its stride of the n_samples
+    examples (sampled deterministically with `seed` so all ranks agree on
+    the selection). Per-rank shards are written to tmp files and rank 0
+    concatenates them before fitting LR.
     """
     import numpy as np
     import torch
@@ -248,23 +283,31 @@ def _run_layer_sweep(
     from sklearn.metrics import roc_auc_score
     from tqdm import tqdm
 
-    log.info(
-        "Layer sweep: %d samples, %d-fold CV, layers=%s",
-        n_samples, n_folds, SWEEP_LAYERS,
-    )
+    is_main = local_rank == 0
+    if is_main:
+        log.info(
+            "Layer sweep: %d samples, %d-fold CV, layers=%s, world_size=%d",
+            n_samples, n_folds, SWEEP_LAYERS, world_size,
+        )
 
+    # All ranks sample the SAME indices (deterministic seed) then take their stride.
     rng = np.random.default_rng(seed)
     n_available = len(probe_ds)
-    indices = rng.choice(n_available, size=min(n_samples, n_available), replace=False)
+    all_indices = rng.choice(
+        n_available, size=min(n_samples, n_available), replace=False
+    )
+    my_indices = all_indices[local_rank::world_size]
 
-    # Collect hidden states at all sweep layers in one pass per example
     hidden_by_layer: dict[int, list] = {l: [] for l in SWEEP_LAYERS}
     y_list: list[int] = []
+    sample_pos_list: list[int] = []   # position in all_indices for ordering
 
     with torch.inference_mode():
-        for pos, raw_idx in enumerate(
-            tqdm(indices.tolist(), desc="Sweep forward passes")
-        ):
+        iterator = my_indices.tolist()
+        if is_main:
+            iterator = tqdm(iterator, desc="Sweep forward passes (rank0)",
+                            total=len(my_indices))
+        for raw_idx in iterator:
             ex = probe_ds[int(raw_idx)]
             try:
                 question, opts, label, _ = _normalize(ex, "medmcqa")
@@ -279,33 +322,52 @@ def _run_layer_sweep(
 
             outputs = model(input_ids, output_hidden_states=True)
 
-            # Correctness label
             logits_abcd = outputs.logits[0, -1, IDS_ABCD]
             pred_idx = int(F.softmax(logits_abcd, dim=-1).argmax().item())
             y_list.append(int("ABCD"[pred_idx] == label))
+            sample_pos_list.append(int(raw_idx))
 
             for layer_idx in SWEEP_LAYERS:
                 h = outputs.hidden_states[layer_idx][0, -1, :].cpu().float().numpy()
                 hidden_by_layer[layer_idx].append(h)
 
             del outputs
-            if (pos + 1) % 200 == 0 and torch.cuda.is_available():
-                torch.cuda.empty_cache()
 
-    y_arr = np.array(y_list, dtype=np.int32)
+    # Write per-rank shard to disk
+    tmp_dir = ROOT / "data" / "features" / "_sweep_tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    shard = {f"layer_{l}": np.stack(hidden_by_layer[l]) for l in SWEEP_LAYERS}
+    shard["y"] = np.array(y_list, dtype=np.int32)
+    shard["sample_pos"] = np.array(sample_pos_list, dtype=np.int64)
+    np.savez(tmp_dir / f"shard_rank{local_rank}.npz", **shard)
+    log.info("  Rank %d: wrote %d sweep samples to disk", local_rank, len(y_list))
+
+    barrier()
+    if not is_main:
+        # Non-main ranks wait for rank 0 to publish layer_sweep.json
+        barrier()
+        sweep_data = json.loads((ROOT / "results" / "layer_sweep.json").read_text())
+        return int(sweep_data["best_layer"])
+
+    # ---- rank 0 only ----
+    log.info("  Rank 0: gathering shards and fitting per-layer LRs …")
+    shards = [np.load(tmp_dir / f"shard_rank{r}.npz") for r in range(world_size)]
+    # Concatenate; order doesn't matter for k-fold CV, only need (X, y) aligned
+    y_arr = np.concatenate([s["y"] for s in shards])
     n = len(y_arr)
     log.info(
         "  Sweep samples collected: %d  (correct=%d  wrong=%d  acc=%.3f)",
-        n, y_arr.sum(), n - y_arr.sum(), y_arr.mean(),
+        n, int(y_arr.sum()), n - int(y_arr.sum()), float(y_arr.mean()),
     )
 
     kf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=seed)
     layer_results: dict[int, dict] = {}
 
     for layer_idx in SWEEP_LAYERS:
-        H_mat = np.stack(hidden_by_layer[layer_idx])   # [n, 4096]
+        H_mat = np.concatenate(
+            [s[f"layer_{layer_idx}"] for s in shards], axis=0
+        )   # [n, 4096]
         fold_aurocs: list[float] = []
-
         for fold, (tr_idx, va_idx) in enumerate(kf.split(H_mat, y_arr)):
             lr = LogisticRegression(
                 C=1.0, penalty="l2", max_iter=500,
@@ -341,10 +403,20 @@ def _run_layer_sweep(
         "n_samples": n,
         "n_folds": n_folds,
         "sweep_layers": SWEEP_LAYERS,
+        "world_size": world_size,
         "layers": {str(l): v for l, v in layer_results.items()},
     }, indent=2))
     log.info("Layer sweep results saved to %s", sweep_path)
 
+    # Clean up tmp shards
+    for f in tmp_dir.glob("shard_rank*.npz"):
+        f.unlink()
+    try:
+        tmp_dir.rmdir()
+    except OSError:
+        pass
+
+    barrier()  # release the other ranks
     return best_layer
 
 
@@ -362,21 +434,31 @@ def _extract_split(
     no_id: int,
     skip_ptrue: bool,
     debug_n: int | None = None,
+    local_rank: int = 0,
+    world_size: int = 1,
 ) -> dict[str, list]:
-    """Extract H, gap, p_true, y, pred, true, subject, hidden for every example."""
+    """Extract H, gap, p_true, y, pred, true, subject, hidden for every example.
+
+    Under world_size>1, this rank only processes indices `local_rank::world_size`
+    and the returned dict additionally contains an "orig_idx" array so rank 0
+    can re-sort after stitching shards.
+    """
     import torch
     import torch.nn.functional as F
     from tqdm import tqdm
 
     if debug_n is not None:
         examples = examples.select(range(min(debug_n, len(examples))))
-        log.info("  DEBUG: truncated to %d examples", len(examples))
+        if local_rank == 0:
+            log.info("  DEBUG: truncated to %d examples", len(examples))
 
-    n = len(examples)
-    log.info(
-        "  %d examples  source=%s  layer=%d  skip_ptrue=%s",
-        n, source, best_layer, skip_ptrue,
-    )
+    n_total = len(examples)
+    my_indices = list(range(local_rank, n_total, world_size))
+    if local_rank == 0:
+        log.info(
+            "  %d examples total  source=%s  layer=%d  skip_ptrue=%s  world_size=%d  rank0_shard=%d",
+            n_total, source, best_layer, skip_ptrue, world_size, len(my_indices),
+        )
 
     H_list:       list[float] = []
     gap_list:     list[float] = []
@@ -386,9 +468,14 @@ def _extract_split(
     true_list:    list[str]   = []
     subject_list: list[str]   = []
     hidden_list:  list        = []
+    orig_idx_list: list[int]  = []
 
     with torch.inference_mode():
-        for pos, ex in enumerate(tqdm(examples, desc=f"  {source}")):
+        iterator = my_indices
+        if local_rank == 0:
+            iterator = tqdm(my_indices, desc=f"  {source} (rank0 shard)")
+        for pos in iterator:
+            ex = examples[pos]
             try:
                 question, opts, label, subject = _normalize(ex, source)
             except (ValueError, KeyError) as e:
@@ -415,7 +502,6 @@ def _extract_split(
             h = outputs.hidden_states[best_layer][0, -1, :].cpu().float().numpy()
             del outputs
 
-            # p(True) — P(Yes) from "Is this answer correct? (Yes/No):"
             if skip_ptrue:
                 p_true = float("nan")
             else:
@@ -439,12 +525,16 @@ def _extract_split(
             true_list.append(label)
             subject_list.append(subject)
             hidden_list.append(h)
+            orig_idx_list.append(int(pos))
 
-            if (pos + 1) % 500 == 0:
+            if local_rank == 0 and len(y_list) % 500 == 0:
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
-                log.info("  … %d / %d  (running acc=%.3f)",
-                         pos + 1, n, sum(y_list) / len(y_list))
+                log.info(
+                    "  … rank0 %d / %d  (running shard acc=%.3f)",
+                    len(y_list), len(my_indices),
+                    sum(y_list) / len(y_list),
+                )
 
     return {
         "H":       H_list,
@@ -455,7 +545,105 @@ def _extract_split(
         "true":    true_list,
         "subject": subject_list,
         "hidden":  hidden_list,
+        "orig_idx": orig_idx_list,
     }
+
+
+def _save_shard_to_tmp(features: dict, split: str, rank: int, features_dir: Path) -> Path:
+    """Persist a single rank's shard to disk so rank 0 can stitch later.
+
+    An empty shard (all examples skipped on this rank) is saved as zero-length
+    arrays so rank 0's stitcher can detect "this split is fully empty" without
+    deadlocking the barrier.
+    """
+    import numpy as np
+    tmp_dir = features_dir / "_tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    out_path = tmp_dir / f"{split}_features.rank{rank}.npz"
+    n = len(features["hidden"])
+    hidden_arr = (
+        np.stack(features["hidden"]).astype(np.float32)
+        if n > 0 else np.zeros((0, 4096), dtype=np.float32)
+    )
+    np.savez(
+        out_path,
+        H=np.array(features["H"], dtype=np.float32),
+        gap=np.array(features["gap"], dtype=np.float32),
+        p_true=np.array(features["p_true"], dtype=np.float32),
+        y=np.array(features["y"], dtype=np.int32),
+        pred=np.array(features["pred"], dtype="U1"),
+        true=np.array(features["true"], dtype="U1"),
+        subject=np.array(features["subject"], dtype="U50"),
+        hidden=hidden_arr,
+        orig_idx=np.array(features["orig_idx"], dtype=np.int64),
+    )
+    return out_path
+
+
+def _concat_shards(split: str, world_size: int, features_dir: Path) -> None:
+    """Rank 0: read all per-rank shards, sort by orig_idx, write final files, clean up.
+
+    If every shard is empty (all examples were invalid, e.g. MedMCQA test set
+    has cop=-1 for held-out leaderboard labels), skip writing the final files
+    and log a clear warning.
+    """
+    import numpy as np
+    tmp_dir = features_dir / "_tmp"
+    shards = [
+        np.load(tmp_dir / f"{split}_features.rank{r}.npz", allow_pickle=False)
+        for r in range(world_size)
+    ]
+    n = sum(len(s["y"]) for s in shards)
+    if n == 0:
+        log.warning(
+            "  ⚠ %s: ALL %d shards empty — every example was invalid. "
+            "For MedMCQA test set this means cop=-1 (held-out leaderboard labels). "
+            "Skipping final stitch; no .npz / .npy will be written.",
+            split, world_size,
+        )
+        for r in range(world_size):
+            (tmp_dir / f"{split}_features.rank{r}.npz").unlink(missing_ok=True)
+        return
+
+    orig_idx = np.concatenate([s["orig_idx"] for s in shards])
+    order = np.argsort(orig_idx, kind="stable")
+    log.info("  Stitching %s: %d examples from %d shards", split, n, world_size)
+
+    npz_path = features_dir / f"{split}_features.npz"
+    np.savez_compressed(
+        npz_path,
+        H=np.concatenate([s["H"] for s in shards])[order],
+        gap=np.concatenate([s["gap"] for s in shards])[order],
+        p_true=np.concatenate([s["p_true"] for s in shards])[order],
+        y=np.concatenate([s["y"] for s in shards])[order],
+        pred=np.concatenate([s["pred"] for s in shards])[order],
+        true=np.concatenate([s["true"] for s in shards])[order],
+        subject=np.concatenate([s["subject"] for s in shards])[order],
+    )
+    log.info("  Saved: %s  (%d examples)", npz_path, n)
+
+    hidden_concat = np.concatenate([s["hidden"] for s in shards], axis=0)[order]
+    npy_path = features_dir / f"{split}_hidden.npy"
+    np.save(npy_path, hidden_concat.astype(np.float32))
+    log.info(
+        "  Saved: %s  shape=%s  (%.0f MB)",
+        npy_path, hidden_concat.shape, hidden_concat.nbytes / 1e6,
+    )
+
+    # Sanity-check ordering: orig_idx after sorting should be 0..n-1 (contiguous)
+    sorted_orig = orig_idx[order]
+    if not np.array_equal(sorted_orig, np.arange(n)):
+        log.warning(
+            "  ⚠ %s: orig_idx not contiguous after sort — some examples may have been skipped (n=%d, missing=%s …)",
+            split, n,
+            sorted(set(range(n)) - set(sorted_orig.tolist()))[:5],
+        )
+
+    # Clean up tmp shards for this split
+    for r in range(world_size):
+        (tmp_dir / f"{split}_features.rank{r}.npz").unlink(missing_ok=True)
+    if not any(tmp_dir.iterdir()):
+        tmp_dir.rmdir()
 
 
 def _save_split(features: dict, name: str, features_dir: Path) -> None:
@@ -493,6 +681,43 @@ def _save_split(features: dict, name: str, features_dir: Path) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
+    # ------------------------------------------------------------------
+    # DDP setup — torchrun sets LOCAL_RANK / WORLD_SIZE in env.
+    # ------------------------------------------------------------------
+    local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+    world_size = int(os.environ.get("WORLD_SIZE", "1"))
+    is_main = local_rank == 0
+
+    # Rank-aware logging — rank 0 also writes to file
+    log_handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
+    if is_main:
+        log_dir = ROOT / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / f"extract_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.log"
+        log_handlers.append(logging.FileHandler(log_file, mode="w"))
+    logging.basicConfig(
+        level=logging.INFO if is_main else logging.WARNING,
+        format=f"%(asctime)s  [rank{local_rank}]  %(levelname)s  %(message)s",
+        datefmt="%H:%M:%S",
+        handlers=log_handlers,
+        force=True,
+    )
+    if is_main:
+        log.info("DDP world_size=%d  local_rank=%d  log_file=%s",
+                 world_size, local_rank, log_file)
+
+    # Init torch.distributed only for cross-rank barriers
+    if world_size > 1:
+        import torch
+        import torch.distributed as dist
+        torch.cuda.set_device(local_rank)
+        dist.init_process_group(backend="nccl", init_method="env://")
+        def barrier():
+            dist.barrier()
+    else:
+        def barrier():
+            pass
+
     parser = argparse.ArgumentParser(
         description="Feature extraction — MedMCQA + MedQA + MMLU"
     )
@@ -513,11 +738,15 @@ def main() -> None:
         "--layer", type=int, default=None,
         help="Use this hidden layer directly; skip the layer sweep.",
     )
+    parser.add_argument(
+        "--config", default="finetune_config.yaml",
+        help="YAML config under configs/ (use finetune_config_ddp.yaml for SDPA attention).",
+    )
     args = parser.parse_args()
 
     import datasets as hf_datasets
 
-    cfg         = _load_config()
+    cfg         = _load_config(config_name=args.config)
     features_dir = ROOT / "data" / "features"
     splits_dir   = ROOT / "data" / "splits"
     results_dir  = ROOT / "results"
@@ -525,9 +754,11 @@ def main() -> None:
     debug_n       = 50 if args.debug else None
 
     # ------------------------------------------------------------------
-    # 1. Load model
+    # 1. Load model (per-rank full copy)
     # ------------------------------------------------------------------
-    model, tokenizer = _load_model(cfg, debug=args.debug)
+    model, tokenizer = _load_model(
+        cfg, debug=args.debug, local_rank=local_rank, world_size=world_size,
+    )
 
     _yes_toks = tokenizer.encode(" Yes", add_special_tokens=False)
     _no_toks  = tokenizer.encode(" No",  add_special_tokens=False)
@@ -566,63 +797,69 @@ def main() -> None:
     # ------------------------------------------------------------------
     if args.layer is not None:
         best_layer = args.layer
-        log.info("Using --layer %d (sweep skipped)", best_layer)
+        if is_main:
+            log.info("Using --layer %d (sweep skipped)", best_layer)
     elif args.debug:
         best_layer = 31
-        log.info("DEBUG mode — using layer 31 (sweep skipped)")
+        if is_main:
+            log.info("DEBUG mode — using layer 31 (sweep skipped)")
     else:
         sweep_path = results_dir / "layer_sweep.json"
         if sweep_path.exists():
             sweep_data = json.loads(sweep_path.read_text())
             best_layer = int(sweep_data["best_layer"])
-            log.info(
-                "Layer sweep loaded from cache: best_layer=%d  (AUROC=%.4f)",
-                best_layer,
-                sweep_data["layers"][str(best_layer)]["mean_auroc"],
-            )
+            if is_main:
+                log.info(
+                    "Layer sweep loaded from cache: best_layer=%d  (AUROC=%.4f)",
+                    best_layer,
+                    sweep_data["layers"][str(best_layer)]["mean_auroc"],
+                )
         else:
             best_layer = _run_layer_sweep(
                 model, tokenizer, probe_ds,
                 n_samples=2000, n_folds=5,
+                local_rank=local_rank, world_size=world_size, barrier=barrier,
             )
 
-    results_dir.mkdir(exist_ok=True)
-    (results_dir / "best_layer.json").write_text(
-        json.dumps({"best_layer": best_layer}, indent=2)
-    )
+    if is_main:
+        results_dir.mkdir(exist_ok=True)
+        (results_dir / "best_layer.json").write_text(
+            json.dumps({"best_layer": best_layer}, indent=2)
+        )
 
     # ------------------------------------------------------------------
-    # 4. Extract each split
+    # 4. Extract each split (per-rank shard → barrier → rank 0 stitches)
     # ------------------------------------------------------------------
     for split_name in splits_to_run:
         out_npz = features_dir / f"{split_name}_features.npz"
         out_npy = features_dir / f"{split_name}_hidden.npy"
 
-        # Resume: skip if both files already exist (unless debug mode)
+        # Resume: skip if both files already exist (unless debug mode).
+        # All ranks must check identically so they reach the same barriers.
         if out_npz.exists() and out_npy.exists() and not args.debug:
-            log.info("Skipping %s — already extracted: %s", split_name, out_npz)
+            if is_main:
+                log.info("Skipping %s — already extracted: %s", split_name, out_npz)
             continue
 
-        log.info("\n%s\nExtracting: %s\n%s", "=" * 60, split_name, "=" * 60)
+        if is_main:
+            log.info("\n%s\nExtracting: %s\n%s", "=" * 60, split_name, "=" * 60)
 
         if split_name == "probe":
             examples, source = probe_ds, "medmcqa"
-
         elif split_name == "val":
             examples, source = medmcqa["validation"], "medmcqa"
-
         elif split_name == "test_medmcqa":
             examples, source = medmcqa["test"], "medmcqa"
-
         elif split_name == "test_medqa":
-            log.info("Loading GBaker/MedQA-USMLE-4-options test …")
+            if is_main:
+                log.info("Loading GBaker/MedQA-USMLE-4-options test …")
             examples = hf_datasets.load_dataset(
                 "GBaker/MedQA-USMLE-4-options", split="test"
             )
             source = "medqa"
-
         elif split_name == "test_mmlu":
-            log.info("Loading MMLU (5 medical categories) test …")
+            if is_main:
+                log.info("Loading MMLU (5 medical categories) test …")
             mmlu_cats = [
                 "clinical_knowledge", "professional_medicine",
                 "college_medicine", "medical_genetics", "anatomy",
@@ -633,9 +870,9 @@ def main() -> None:
             ]
             examples = hf_datasets.concatenate_datasets(parts)
             source = "mmlu"
-
         else:
-            log.error("Unknown split: %s", split_name)
+            if is_main:
+                log.error("Unknown split: %s", split_name)
             continue
 
         features = _extract_split(
@@ -645,12 +882,25 @@ def main() -> None:
             no_id=no_id,
             skip_ptrue=args.skip_ptrue,
             debug_n=debug_n,
+            local_rank=local_rank,
+            world_size=world_size,
         )
-        _save_split(features, split_name, features_dir)
+        _save_shard_to_tmp(features, split_name, local_rank, features_dir)
+
+        barrier()
+        if is_main:
+            _concat_shards(split_name, world_size, features_dir)
+        barrier()
 
     # ------------------------------------------------------------------
-    # 5. Summary
+    # 5. Summary — rank 0 only
     # ------------------------------------------------------------------
+    if not is_main:
+        if world_size > 1:
+            import torch.distributed as dist
+            dist.destroy_process_group()
+        return
+
     import numpy as np
 
     print("\n" + "=" * 60)
@@ -765,6 +1015,10 @@ def main() -> None:
     print(f"  {results_dir}/layer_sweep.json  +  extraction_metadata.json")
     print("\nNext step (student, CPU-local):")
     print("  python scripts/04_probe.py")
+
+    if world_size > 1:
+        import torch.distributed as dist
+        dist.destroy_process_group()
 
 
 if __name__ == "__main__":

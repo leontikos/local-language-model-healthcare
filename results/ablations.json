@@ -1,0 +1,446 @@
+{
+  "timestamp": "2026-05-26T08:23:26.779857Z",
+  "alpha": 0.1,
+  "default_routing_features": [
+    "H",
+    "probe",
+    "p_true"
+  ],
+  "q_hat_global": 0.5814,
+  "ablations": {
+    "table1_signal_subset": {
+      "H": {
+        "features": [
+          "H"
+        ],
+        "best_C": 0.01,
+        "q_hat": 0.6646,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.7429,
+            "augrc": 0.15611,
+            "aurc": 0.23805,
+            "brier": 0.2045,
+            "ece": 0.0559,
+            "n_local": 3249,
+            "local_rate": 0.7767,
+            "local_acc": 0.6399,
+            "escalation_rate": 0.2233,
+            "system_acc_oracle": 0.7203
+          },
+          "near_OOD": {
+            "auroc": 0.6976,
+            "augrc": 0.16862,
+            "aurc": 0.2703,
+            "brier": 0.2291,
+            "ece": 0.1065,
+            "n_local": 1127,
+            "local_rate": 0.8853,
+            "local_acc": 0.5927,
+            "escalation_rate": 0.1147,
+            "system_acc_oracle": 0.6394
+          },
+          "far_OOD": {
+            "auroc": 0.7822,
+            "augrc": 0.09611,
+            "aurc": 0.14342,
+            "brier": 0.1706,
+            "ece": 0.0388,
+            "n_local": 858,
+            "local_rate": 0.9079,
+            "local_acc": 0.7214,
+            "escalation_rate": 0.0921,
+            "system_acc_oracle": 0.7471
+          }
+        }
+      },
+      "probe": {
+        "features": [
+          "probe"
+        ],
+        "best_C": 0.01,
+        "q_hat": 0.5076,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.7218,
+            "augrc": 0.16084,
+            "aurc": 0.24784,
+            "brier": 0.2101,
+            "ece": 0.0568,
+            "n_local": 3422,
+            "local_rate": 0.8181,
+            "local_acc": 0.6175,
+            "escalation_rate": 0.1819,
+            "system_acc_oracle": 0.6871
+          },
+          "near_OOD": {
+            "auroc": 0.6812,
+            "augrc": 0.17214,
+            "aurc": 0.28368,
+            "brier": 0.2299,
+            "ece": 0.0968,
+            "n_local": 1165,
+            "local_rate": 0.9152,
+            "local_acc": 0.5803,
+            "escalation_rate": 0.0848,
+            "system_acc_oracle": 0.6159
+          },
+          "far_OOD": {
+            "auroc": 0.7683,
+            "augrc": 0.0986,
+            "aurc": 0.1515,
+            "brier": 0.1742,
+            "ece": 0.0307,
+            "n_local": 864,
+            "local_rate": 0.9143,
+            "local_acc": 0.7188,
+            "escalation_rate": 0.0857,
+            "system_acc_oracle": 0.7429
+          }
+        }
+      },
+      "p_true": {
+        "features": [
+          "p_true"
+        ],
+        "best_C": 0.01,
+        "q_hat": 0.3322,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.5931,
+            "augrc": 0.19256,
+            "aurc": 0.34985,
+            "brier": 0.2597,
+            "ece": 0.1449,
+            "n_local": 3796,
+            "local_rate": 0.9075,
+            "local_acc": 0.5861,
+            "escalation_rate": 0.0925,
+            "system_acc_oracle": 0.6244
+          },
+          "near_OOD": {
+            "auroc": 0.5749,
+            "augrc": 0.19737,
+            "aurc": 0.35977,
+            "brier": 0.2527,
+            "ece": 0.1041,
+            "n_local": 776,
+            "local_rate": 0.6096,
+            "local_acc": 0.5992,
+            "escalation_rate": 0.3904,
+            "system_acc_oracle": 0.7557
+          },
+          "far_OOD": {
+            "auroc": 0.6213,
+            "augrc": 0.13182,
+            "aurc": 0.22683,
+            "brier": 0.209,
+            "ece": 0.0554,
+            "n_local": 837,
+            "local_rate": 0.8857,
+            "local_acc": 0.7049,
+            "escalation_rate": 0.1143,
+            "system_acc_oracle": 0.7386
+          }
+        }
+      },
+      "H+probe": {
+        "features": [
+          "H",
+          "probe"
+        ],
+        "best_C": 1.0,
+        "q_hat": 0.6529,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.7419,
+            "augrc": 0.15645,
+            "aurc": 0.23926,
+            "brier": 0.2053,
+            "ece": 0.0493,
+            "n_local": 3946,
+            "local_rate": 0.9433,
+            "local_acc": 0.5884,
+            "escalation_rate": 0.0567,
+            "system_acc_oracle": 0.6118
+          },
+          "near_OOD": {
+            "auroc": 0.6951,
+            "augrc": 0.16927,
+            "aurc": 0.2736,
+            "brier": 0.2295,
+            "ece": 0.1016,
+            "n_local": 1249,
+            "local_rate": 0.9811,
+            "local_acc": 0.5717,
+            "escalation_rate": 0.0189,
+            "system_acc_oracle": 0.5797
+          },
+          "far_OOD": {
+            "auroc": 0.7817,
+            "augrc": 0.09644,
+            "aurc": 0.1414,
+            "brier": 0.1709,
+            "ece": 0.036,
+            "n_local": 930,
+            "local_rate": 0.9841,
+            "local_acc": 0.6935,
+            "escalation_rate": 0.0159,
+            "system_acc_oracle": 0.6984
+          }
+        }
+      },
+      "H+probe+p_true": {
+        "features": [
+          "H",
+          "probe",
+          "p_true"
+        ],
+        "best_C": 1.0,
+        "q_hat": 0.6543,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.7407,
+            "augrc": 0.15666,
+            "aurc": 0.2394,
+            "brier": 0.2059,
+            "ece": 0.0516,
+            "n_local": 3917,
+            "local_rate": 0.9364,
+            "local_acc": 0.5905,
+            "escalation_rate": 0.0636,
+            "system_acc_oracle": 0.6165
+          },
+          "near_OOD": {
+            "auroc": 0.6947,
+            "augrc": 0.16857,
+            "aurc": 0.27144,
+            "brier": 0.2299,
+            "ece": 0.1049,
+            "n_local": 1251,
+            "local_rate": 0.9827,
+            "local_acc": 0.5715,
+            "escalation_rate": 0.0173,
+            "system_acc_oracle": 0.5789
+          },
+          "far_OOD": {
+            "auroc": 0.7825,
+            "augrc": 0.09649,
+            "aurc": 0.14346,
+            "brier": 0.1707,
+            "ece": 0.0361,
+            "n_local": 927,
+            "local_rate": 0.981,
+            "local_acc": 0.6958,
+            "escalation_rate": 0.019,
+            "system_acc_oracle": 0.7016
+          }
+        }
+      },
+      "H+gap+probe+p_true": {
+        "features": [
+          "H",
+          "gap",
+          "probe",
+          "p_true"
+        ],
+        "best_C": 1.0,
+        "q_hat": 0.65,
+        "per_split": {
+          "in_dist": {
+            "auroc": 0.741,
+            "augrc": 0.15686,
+            "aurc": 0.23886,
+            "brier": 0.2045,
+            "ece": 0.0476,
+            "n_local": 3990,
+            "local_rate": 0.9539,
+            "local_acc": 0.5827,
+            "escalation_rate": 0.0461,
+            "system_acc_oracle": 0.602
+          },
+          "near_OOD": {
+            "auroc": 0.6951,
+            "augrc": 0.16868,
+            "aurc": 0.27121,
+            "brier": 0.2297,
+            "ece": 0.0978,
+            "n_local": 1259,
+            "local_rate": 0.989,
+            "local_acc": 0.5687,
+            "escalation_rate": 0.011,
+            "system_acc_oracle": 0.5734
+          },
+          "far_OOD": {
+            "auroc": 0.7851,
+            "augrc": 0.0952,
+            "aurc": 0.14412,
+            "brier": 0.1708,
+            "ece": 0.0428,
+            "n_local": 933,
+            "local_rate": 0.9873,
+            "local_acc": 0.6902,
+            "escalation_rate": 0.0127,
+            "system_acc_oracle": 0.6942
+          }
+        }
+      }
+    },
+    "table2_calibration": {
+      "uncalibrated": {
+        "in_dist": {
+          "brier": 0.2053,
+          "ece": 0.0576,
+          "auroc": 0.7437
+        },
+        "near_OOD": {
+          "brier": 0.2298,
+          "ece": 0.109,
+          "auroc": 0.6964
+        },
+        "far_OOD": {
+          "brier": 0.1709,
+          "ece": 0.0494,
+          "auroc": 0.7851
+        }
+      },
+      "isotonic_vanilla": {
+        "in_dist": {
+          "brier": 0.2041,
+          "ece": 0.0548,
+          "auroc": 0.7429
+        },
+        "near_OOD": {
+          "brier": 0.2301,
+          "ece": 0.1032,
+          "auroc": 0.6949
+        },
+        "far_OOD": {
+          "brier": 0.1705,
+          "ece": 0.0425,
+          "auroc": 0.7823
+        }
+      },
+      "platt": {
+        "in_dist": {
+          "brier": 0.2088,
+          "ece": 0.0709,
+          "auroc": 0.7437
+        },
+        "near_OOD": {
+          "brier": 0.2358,
+          "ece": 0.1236,
+          "auroc": 0.6964
+        },
+        "far_OOD": {
+          "brier": 0.1736,
+          "ece": 0.0651,
+          "auroc": 0.7851
+        }
+      }
+    },
+    "table3_cp_variant": {
+      "split_global": {
+        "in_dist": {
+          "n_local": 3316,
+          "local_rate": 0.7927,
+          "local_acc": 0.6339,
+          "escalation_rate": 0.2073,
+          "system_acc_oracle": 0.7098
+        },
+        "near_OOD": {
+          "n_local": 1154,
+          "local_rate": 0.9065,
+          "local_acc": 0.5832,
+          "escalation_rate": 0.0935,
+          "system_acc_oracle": 0.6222
+        },
+        "far_OOD": {
+          "n_local": 870,
+          "local_rate": 0.9206,
+          "local_acc": 0.7172,
+          "escalation_rate": 0.0794,
+          "system_acc_oracle": 0.7397
+        }
+      },
+      "mondrian": {
+        "in_dist": {
+          "n_local": 3675,
+          "local_rate": 0.8786,
+          "local_acc": 0.6084,
+          "escalation_rate": 0.1214,
+          "per_domain_n": {
+            "anatomy_physiology": 405,
+            "basic_science": 526,
+            "clinical": 2396,
+            "other": 442,
+            "pharmacology": 414
+          },
+          "per_domain_local_rate": {
+            "anatomy_physiology": 0.9185,
+            "basic_science": 0.8251,
+            "clinical": 0.8886,
+            "other": 0.8575,
+            "pharmacology": 0.872
+          },
+          "per_domain_local_acc": {
+            "anatomy_physiology": 0.6263,
+            "basic_science": 0.7304,
+            "clinical": 0.5575,
+            "other": 0.591,
+            "pharmacology": 0.7618
+          }
+        },
+        "near_OOD": {
+          "n_local": 1155,
+          "local_rate": 0.9073,
+          "local_acc": 0.5827,
+          "escalation_rate": 0.0927,
+          "per_domain_n": {
+            "other": 1273
+          },
+          "per_domain_local_rate": {
+            "other": 0.9073
+          },
+          "per_domain_local_acc": {
+            "other": 0.5827
+          }
+        },
+        "far_OOD": {
+          "n_local": 870,
+          "local_rate": 0.9206,
+          "local_acc": 0.7172,
+          "escalation_rate": 0.0794,
+          "per_domain_n": {
+            "other": 945
+          },
+          "per_domain_local_rate": {
+            "other": 0.9206
+          },
+          "per_domain_local_acc": {
+            "other": 0.7172
+          }
+        }
+      }
+    },
+    "table4_probe_architecture": {
+      "lr_oof_auroc": 0.792,
+      "lr_oof_brier": 0.1578,
+      "mlp_oof_auroc": 0.79062,
+      "mlp_oof_brier": 0.15746,
+      "delta_auroc": -0.00138,
+      "verdict": "Keep LR (\u0394 \u2264 0.02 \u2014 MLP not worth complexity)",
+      "n_probe": 13307
+    },
+    "table5_layer_sweep_ref": {
+      "best_layer": 24,
+      "per_layer_auroc": {
+        "8": 0.63813,
+        "16": 0.70159,
+        "24": 0.737,
+        "30": 0.71784,
+        "31": 0.71834
+      }
+    }
+  }
+}

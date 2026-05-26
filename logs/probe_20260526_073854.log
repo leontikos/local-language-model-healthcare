@@ -1,0 +1,68 @@
+07:38:56  INFO  Loading probe features …
+07:38:56  INFO    probe_set: 13307 examples  hidden_dim=4096  acc(base)=0.729
+07:38:56  INFO    Fold 1/5: fit LogisticRegressionCV on 10645, score 2662 …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:39:33  INFO      fold AUROC = 0.8100  best C = [0.01]
+07:39:33  INFO    Fold 2/5: fit LogisticRegressionCV on 10645, score 2662 …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:40:13  INFO      fold AUROC = 0.7808  best C = [0.01]
+07:40:13  INFO    Fold 3/5: fit LogisticRegressionCV on 10646, score 2661 …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:40:56  INFO      fold AUROC = 0.7857  best C = [0.01]
+07:40:56  INFO    Fold 4/5: fit LogisticRegressionCV on 10646, score 2661 …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:41:34  INFO      fold AUROC = 0.8015  best C = [0.01]
+07:41:34  INFO    Fold 5/5: fit LogisticRegressionCV on 10646, score 2661 …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:42:12  INFO      fold AUROC = 0.7824  best C = [0.01]
+07:42:12  INFO    Mean fold AUROC: 0.7921 ± 0.0116
+07:42:12  INFO    Pooled OOF AUROC: 0.7920   OOF Brier: 0.1578
+07:42:12  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_scores_oof.npy
+07:42:12  INFO  Training final probe on all 13307 probe_set examples …
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1780: FutureWarning: The default value for l1_ratios will change from None to (0.0,) in version 1.10. From version 1.10 onwards, only array-like with values in [0, 1] will be allowed, None will be forbidden. To avoid this warning, explicitly set a value, e.g. l1_ratios=(0,).
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1811: FutureWarning: 'penalty' was deprecated in version 1.8 and will be removed in 1.10. To avoid this warning, leave 'penalty' set to its default value and use 'l1_ratios' instead. Use l1_ratios=(0,) instead of penalty='l2'  and l1_ratios=(1,) instead of penalty='l1'.
+  warnings.warn(
+/home/lciechanowski/anaconda3/envs/ai/lib/python3.13/site-packages/sklearn/linear_model/_logistic.py:1823: FutureWarning: The fitted attributes of LogisticRegressionCV will be simplified in scikit-learn 1.10 to remove redundancy. Set`use_legacy_attributes=False` to enable the new behavior now, or set it to `True` to silence this warning during the transition period while keeping the deprecated behavior for the time being. The default value of use_legacy_attributes will change from True to False in scikit-learn 1.10. See the docstring of LogisticRegressionCV for more details.
+  warnings.warn(
+07:43:07  INFO    Final probe best C = [0.01]
+07:43:07  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final_probe.pkl
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/04_probe.py:113: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+07:43:07  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/probe_metrics.json
+
+============================================================
+KROK 5 DONE
+  Pooled OOF AUROC : 0.7920
+  Mean fold AUROC  : 0.7921
+  OOF Brier        : 0.1578
+  Saved            : /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_scores_oof.npy
+                     /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final_probe.pkl
+                     /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/probe_metrics.json
+  Next             : python scripts/05_routing.py
+============================================================

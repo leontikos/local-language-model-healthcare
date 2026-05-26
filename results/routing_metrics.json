@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-05-26T07:49:37.715459Z",
+  "seed": 42,
+  "splits": {
+    "routing_train": 8000,
+    "iso_cal": 2000,
+    "conformal_cal": 3307
+  },
+  "correlation_matrix": {
+    "H": {
+      "H": 1.0,
+      "gap": -0.9564,
+      "probe": -0.9179,
+      "p_true": -0.3241
+    },
+    "gap": {
+      "H": -0.9564,
+      "gap": 1.0,
+      "probe": 0.8719,
+      "p_true": 0.2933
+    },
+    "probe": {
+      "H": -0.9179,
+      "gap": 0.8719,
+      "probe": 1.0,
+      "p_true": 0.2979
+    },
+    "p_true": {
+      "H": -0.3241,
+      "gap": 0.2933,
+      "probe": 0.2979,
+      "p_true": 1.0
+    }
+  },
+  "r_H_gap_abs": 0.9564,
+  "routing_feature_names": [
+    "H",
+    "probe",
+    "p_true"
+  ],
+  "routing_lr_best_C": 0.1,
+  "routing_lr_weights": {
+    "H": -2.71576,
+    "probe": 0.37834,
+    "p_true": -0.08865
+  },
+  "routing_lr_intercept": 2.89844,
+  "routing_lr_train_auroc": 0.81474,
+  "iso_cal_auroc": 0.81772,
+  "iso_brier_raw": 0.14956,
+  "iso_brier_calibrated": 0.14608
+}

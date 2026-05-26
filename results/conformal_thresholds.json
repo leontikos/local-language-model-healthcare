@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-05-26T07:50:57.725459Z",
+  "seed": 42,
+  "n_conformal_cal": 3307,
+  "alphas": [
+    0.05,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "primary_alpha": 0.1,
+  "n_bootstrap": 1000,
+  "split_cp": {
+    "alpha_0.05": {
+      "alpha": 0.05,
+      "q_hat": 0.67442,
+      "ci_95_low": 0.67442,
+      "ci_95_high": 0.67442,
+      "decision_threshold": 0.32558,
+      "local_rate_on_cal": 0.9679,
+      "coverage_on_cal": 0.7385
+    },
+    "alpha_0.1": {
+      "alpha": 0.1,
+      "q_hat": 0.5814,
+      "ci_95_low": 0.5814,
+      "ci_95_high": 0.67442,
+      "decision_threshold": 0.4186,
+      "local_rate_on_cal": 0.8902,
+      "coverage_on_cal": 0.7704
+    },
+    "alpha_0.15": {
+      "alpha": 0.15,
+      "q_hat": 0.46622,
+      "ci_95_low": 0.46622,
+      "ci_95_high": 0.57812,
+      "decision_threshold": 0.53378,
+      "local_rate_on_cal": 0.8515,
+      "coverage_on_cal": 0.7901
+    },
+    "alpha_0.2": {
+      "alpha": 0.2,
+      "q_hat": 0.46622,
+      "ci_95_low": 0.46622,
+      "ci_95_high": 0.46622,
+      "decision_threshold": 0.53378,
+      "local_rate_on_cal": 0.8515,
+      "coverage_on_cal": 0.7901
+    }
+  },
+  "mondrian_cp_alpha010": {
+    "anatomy_physiology": {
+      "n": 461,
+      "q_hat": 0.67442,
+      "local_rate_on_cal": 0.9675
+    },
+    "basic_science": {
+      "n": 553,
+      "q_hat": 0.57812,
+      "local_rate_on_cal": 0.906
+    },
+    "clinical": {
+      "n": 1199,
+      "q_hat": 0.67442,
+      "local_rate_on_cal": 0.96
+    },
+    "other": {
+      "n": 659,
+      "q_hat": 0.66574,
+      "local_rate_on_cal": 0.9029
+    },
+    "pharmacology": {
+      "n": 435,
+      "q_hat": 0.46622,
+      "local_rate_on_cal": 0.931
+    }
+  },
+  "routing_feature_names": [
+    "H",
+    "probe",
+    "p_true"
+  ]
+}

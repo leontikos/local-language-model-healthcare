@@ -1,0 +1,26 @@
+07:50:56  INFO  Loading probe features + OOF probe scores + routing_lr + calibrator …
+07:50:57  INFO    Routing features: ['H', 'probe', 'p_true']
+07:50:57  INFO    conformal_cal: 3307 examples
+07:50:57  INFO    conformal_cal accuracy = 0.7285  mean routing_score = 0.7335
+07:50:57  INFO    alpha=0.05 → q_hat = 0.6744  [95% CI 0.6744, 0.6744]  decision_threshold = 0.3256  local_rate_on_cal = 0.968  cov_on_cal = 0.739
+07:50:57  INFO    alpha=0.10 → q_hat = 0.5814  [95% CI 0.5814, 0.6744]  decision_threshold = 0.4186  local_rate_on_cal = 0.890  cov_on_cal = 0.770
+07:50:57  INFO    alpha=0.15 → q_hat = 0.4662  [95% CI 0.4662, 0.5781]  decision_threshold = 0.5338  local_rate_on_cal = 0.852  cov_on_cal = 0.790
+07:50:57  INFO    alpha=0.20 → q_hat = 0.4662  [95% CI 0.4662, 0.4662]  decision_threshold = 0.5338  local_rate_on_cal = 0.852  cov_on_cal = 0.790
+07:50:57  INFO    Mondrian anatomy_physiology (n=461): q_hat = 0.6744
+07:50:57  INFO    Mondrian basic_science (n=553): q_hat = 0.5781
+07:50:57  INFO    Mondrian clinical (n=1199): q_hat = 0.6744
+07:50:57  INFO    Mondrian other (n=659): q_hat = 0.6657
+07:50:57  INFO    Mondrian pharmacology (n=435): q_hat = 0.4662
+/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/scripts/06_conformal.py:199: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+07:50:57  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/results/conformal_thresholds.json
+
+============================================================
+KROK 7 DONE
+  Primary alpha            : 0.1
+  q_hat                    : 0.5814  [95% CI 0.5814, 0.6744]
+  decision threshold (1-q) : 0.4186
+  local_rate on cal        : 0.890
+  coverage  on cal         : 0.770
+  Next                     : python scripts/07_evaluate.py
+============================================================

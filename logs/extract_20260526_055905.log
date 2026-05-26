@@ -1,0 +1,49 @@
+05:59:05  [rank0]  INFO  DDP world_size=4  local_rank=0  log_file=/home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/logs/extract_20260526_055905.log
+05:59:08  [rank0]  INFO  GPU[0]: NVIDIA L4  (23.7 GB VRAM)
+05:59:08  [rank0]  INFO  Loading tokenizer from /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+05:59:08  [rank0]  INFO  Verifying token IDs A/B/C/D …
+05:59:08  [rank0]  INFO    ✓ Token IDs verified: A=1098  B=1133  C=1102  D=1152
+05:59:08  [rank0]  INFO  Loading base model: mistralai/Mistral-7B-Instruct-v0.3  dtype=bfloat16  device_map={'': 0}  attn=sdpa
+05:59:12  [rank0]  INFO  Loading LoRA adapter from /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/checkpoints/final
+05:59:14  [rank0]  INFO  Merging LoRA weights into base model (faster inference) …
+05:59:15  [rank0]  INFO  yes_id=6360  no_id=2538  skip_ptrue=False
+05:59:15  [rank0]  INFO  Loading MedMCQA dataset …
+05:59:17  [rank0]  INFO  Probe set loaded: 13307 examples
+05:59:17  [rank0]  INFO  DEBUG mode — using layer 31 (sweep skipped)
+05:59:17  [rank0]  INFO  
+============================================================
+Extracting: probe
+============================================================
+05:59:17  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:17  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+05:59:20  [rank0]  INFO    Stitching probe: 50 examples from 4 shards
+05:59:20  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_features.npz  (50 examples)
+05:59:20  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/probe_hidden.npy  shape=(50, 4096)  (1 MB)
+05:59:20  [rank0]  INFO  
+============================================================
+Extracting: val
+============================================================
+05:59:20  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:20  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+05:59:22  [rank0]  INFO    Stitching val: 50 examples from 4 shards
+05:59:22  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/val_features.npz  (50 examples)
+05:59:22  [rank0]  INFO    Saved: /home/lciechanowski/PROJECTS/GitHub/local-language-model-healthcare/data/features/val_hidden.npy  shape=(50, 4096)  (1 MB)
+05:59:22  [rank0]  INFO  
+============================================================
+Extracting: test_medmcqa
+============================================================
+05:59:22  [rank0]  INFO    DEBUG: truncated to 50 examples
+05:59:22  [rank0]  INFO    50 examples total  source=medmcqa  layer=31  skip_ptrue=False  world_size=4  rank0_shard=13
+05:59:22  [rank0]  WARNING    Skipping example 0: Invalid cop=-1 in id=84f328d3-fca4-422d-8fb2-19d55eb31503
+05:59:22  [rank0]  WARNING    Skipping example 4: Invalid cop=-1 in id=9c82e23e-714e-422b-a4fa-e89aef919819
+05:59:22  [rank0]  WARNING    Skipping example 8: Invalid cop=-1 in id=a7dfee1b-f9df-44ed-942c-30b4cddbba01
+05:59:22  [rank0]  WARNING    Skipping example 12: Invalid cop=-1 in id=8e07667a-9fb5-42ec-a2cc-5fb3e7068ea2
+05:59:22  [rank0]  WARNING    Skipping example 16: Invalid cop=-1 in id=c5db9b96-6df7-429d-ad14-d98a4511de84
+05:59:22  [rank0]  WARNING    Skipping example 20: Invalid cop=-1 in id=d63cd672-f3cb-4181-83af-ce91d9eda768
+05:59:22  [rank0]  WARNING    Skipping example 24: Invalid cop=-1 in id=1fa9d7dc-9661-422b-b668-247425b47a4f
+05:59:22  [rank0]  WARNING    Skipping example 28: Invalid cop=-1 in id=533f226b-6108-46be-9375-507ed9c7a163
+05:59:22  [rank0]  WARNING    Skipping example 32: Invalid cop=-1 in id=6374f514-0727-4ddf-896e-ef6798ec8d79
+05:59:22  [rank0]  WARNING    Skipping example 36: Invalid cop=-1 in id=cb12fac8-5989-44bd-9ad9-03608df2f755
+05:59:22  [rank0]  WARNING    Skipping example 40: Invalid cop=-1 in id=2b2d03e4-3717-4159-8478-c91da5bde875
+05:59:22  [rank0]  WARNING    Skipping example 44: Invalid cop=-1 in id=02d6cf80-a129-4b05-9d27-30d285992456
+05:59:22  [rank0]  WARNING    Skipping example 48: Invalid cop=-1 in id=6f5e5b14-6f8d-43bd-8919-2af994ef23e7
